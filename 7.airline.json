@@ -1,0 +1,180 @@
+{
+  "description": "Система Авиакомпания. Авиакомпания имеет список рейсов. Диспетчер формирует летную Бригаду (пилоты, штурман, радист, стюардессы) на Рейс. Администратор управляет списком рейсов.",
+  "persons": [
+    {
+      "personName": "Freddie O'Donnell",
+      "personType": "DISPATCHER"
+    },
+    {
+      "personName": "Bradley Archer",
+      "personType": "ADMINISTRATOR"
+    },
+    {
+      "personName": "Patrick Goddard",
+      "personType": "PILOT",
+      "flights": [
+        {
+          "flightName": "London-Paris"
+        },
+        {
+          "flightName": "Paris-London"
+        }
+      ]
+    },
+    {
+      "personName": "Henry Forster",
+      "personType": "PILOT",
+      "flights": [
+        {
+          "flightName": "London-Dublin"
+        }
+      ]
+    },
+    {
+      "personName": "Scott Sanders",
+      "personType": "PILOT",
+      "flights": [
+        {
+          "flightName": "London-Amsterdam"
+        }
+      ]
+    },
+    {
+      "personName": "Maya Wilkinson",
+      "personType": "PILOT",
+      "flights": [
+        {
+          "flightName": "London-Copenhagen"
+        }
+      ]
+    },
+    {
+      "personName": "Daniel Porter",
+      "personType": "PILOT"
+    },
+    {
+      "personName": "Thomas Nicholls",
+      "personType": "NAVIGATOR",
+      "flights": [
+        {
+          "flightName": "London-Paris"
+        },
+        {
+          "flightName": "Paris-London"
+        }
+      ]
+    },
+    {
+      "personName": "Samantha Chan",
+      "personType": "NAVIGATOR",
+      "flights": [
+        {
+          "flightName": "London-Dublin"
+        }
+      ]
+    },
+    {
+      "personName": "Connor Bryan",
+      "personType": "NAVIGATOR",
+      "flights": [
+        {
+          "flightName": "London-Amsterdam"
+        }
+      ]
+    },
+    {
+      "personName": "Leo Armstrong",
+      "personType": "NAVIGATOR",
+      "flights": [
+        {
+          "flightName": "London-Copenhagen"
+        }
+      ]
+    },
+    {
+      "personName": "Oliver Talbot",
+      "personType": "NAVIGATOR"
+    },
+    {
+      "personName": "Jordan Berry",
+      "personType": "RADIOMAN",
+      "flights": [
+        {
+          "flightName": "London-Paris"
+        },
+        {
+          "flightName": "Paris-London"
+        }
+      ]
+    },
+    {
+      "personName": "Amelia Burgess",
+      "personType": "RADIOMAN",
+      "flights": [
+        {
+          "flightName": "London-Dublin"
+        }
+      ]
+    },
+    {
+      "personName": "John Potter",
+      "personType": "RADIOMAN",
+      "flights": [
+        {
+          "flightName": "London-Amsterdam"
+        }
+      ]
+    },
+    {
+      "personName": "Alexander Hayward",
+      "personType": "RADIOMAN",
+      "flights": [
+        {
+          "flightName": "London-Copenhagen"
+        }
+      ]
+    },
+    {
+      "personName": "Jonathan Collins",
+      "personType": "RADIOMAN"
+    },
+    {
+      "personName": "Elise Kerr",
+      "personType": "STEWARD",
+      "flights": [
+        {
+          "flightName": "London-Paris"
+        },
+        {
+          "flightName": "Paris-London"
+        }
+      ]
+    },
+    {
+      "personName": "Jasmine Field",
+      "personType": "STEWARD",
+      "flights": [
+        {
+          "flightName": "London-Dublin"
+        }
+      ]
+    },
+    {
+      "personName": "Charlotte Daly",
+      "personType": "STEWARD",
+      "flights": [
+        {
+          "flightName": "London-Dublin"
+        }
+      ]
+    },
+    {
+      "personName": "Sophie Walsh",
+      "personType": "STEWARD"
+    },
+    {
+      "personName": "Anna Ward",
+      "personType": "STEWARD"
+    }
+  ]
+}
