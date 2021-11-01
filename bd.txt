@@ -1,0 +1,45 @@
+CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
+
+CREATE TABLE Persons (
+	id uuid DEFAULT uuid_generate_v1(), 
+	personType text, 
+	personName text, 
+	birthday text, 
+	tel text, 
+	adress text,
+	PRIMARY KEY(id));
+
+CREATE TABLE Flights (
+	id uuid DEFAULT uuid_generate_v1(), 
+	flightName text, 
+	date_comp text, 
+	travel_time text, 				
+	PRIMARY KEY(id));
+					 
+CREATE TABLE Brigades (
+	id uuid DEFAULT uuid_generate_v1(), 
+	dateFormation text, 
+	id_firstPilot uuid, 
+	id_secondPilot uuid, 
+	id_navigator uuid,  
+	id_radioman uuid, 
+	id_firstSteward uuid,
+	id_secondSteward uuid, 			  
+	id_thirdSteward uuid, 
+	id_flight uuid, 
+	PRIMARY KEY(id),
+	FOREIGN KEY(id_flight) REFERENCES Flights(id), 
+	FOREIGN KEY(id_firstPilot) REFERENCES Persons(id), 
+	FOREIGN KEY(id_secondPilot) REFERENCES Persons(id), 
+	FOREIGN KEY(id_navigator) REFERENCES Persons(id),
+	FOREIGN KEY(id_radioman) REFERENCES Persons(id),
+	FOREIGN KEY(id_firstSteward) REFERENCES Persons(id),
+	FOREIGN KEY(id_secondSteward) REFERENCES Persons(id),
+	FOREIGN KEY(id_thirdSteward) REFERENCES Persons(id));
+				  
+CREATE TABLE Users (
+	id uuid DEFAULT uuid_generate_v1(), 
+	login text,
+	password text, 
+	role text, 
+	PRIMARY KEY(id));		

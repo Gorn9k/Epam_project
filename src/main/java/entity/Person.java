@@ -2,31 +2,18 @@ package entity;
 
 import java.util.UUID;
 
-public class Person {
-    private UUID id;
-    private String name;
+public class Person extends BaseEntity{
+    private Brigade brigade;
     private PersonType personType;
+    private String personName;
+    private String birthday;
+    private String tel;
+    private String address;
 
-    public Person(String name, PersonType personType){
-        id = UUID.randomUUID();
-        this.name = name;
+    public Person(String personName, PersonType personType){
+        super();
+        this.personName = personName;
         this.personType = personType;
-    }
-
-    public UUID getId() {
-        return id;
-    }
-
-    public void setId(UUID id) {
-        this.id = id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
     }
 
     public PersonType getPersonType() {
@@ -40,9 +27,11 @@ public class Person {
     @Override
     public String toString() {
         return "Person{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", personType=" + personType +
+                "personType=" + personType +
+                ", personName='" + personName + '\'' +
+                ", birthday='" + birthday + '\'' +
+                ", tel='" + tel + '\'' +
+                ", address='" + address + '\'' +
                 '}';
     }
 }

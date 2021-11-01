@@ -1,20 +1,13 @@
 package entity;
 
-public class Flight {
-    private String name;
-    Brigade brigade;
+public class Flight extends BaseEntity{
+    private Brigade brigade;
+    private String flightName;
 
-    public Flight(String name, Brigade brigade){
-        this.name = name;
+    public Flight(String flightName, Brigade brigade){
+        super();
+        this.flightName = flightName;
         this.brigade = brigade;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
     }
 
     public Brigade getBrigade() {
@@ -28,8 +21,8 @@ public class Flight {
     @Override
     public String toString() {
         return "Flight{" +
-                "name='" + name + '\'' +
-                ", brigade=" + brigade +
+                "brigade=" + brigade +
+                ", flightName='" + flightName + '\'' +
                 '}';
     }
 }
