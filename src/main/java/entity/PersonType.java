@@ -1,5 +1,15 @@
 package entity;
 
 public enum PersonType {
-    PILOT, NAVIGATOR, RADIOMAN, STEWARD;
+    PILOT("PILOT"), NAVIGATOR("NAVIGATOR"), RADIOMAN("RADIOMAN"), STEWARD("STEWARD"), ADMINISTRATOR("ADMINISTRATOR"), DISPATCHER("DISPATCHER");
+
+    private final String type;
+
+    PersonType(String type){
+        this.type = type;
+    }
+
+    public String getType() {
+        return type;
+    }
 }

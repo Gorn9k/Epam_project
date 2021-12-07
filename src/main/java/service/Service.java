@@ -4,9 +4,13 @@ import java.util.List;
 import java.util.UUID;
 
 public interface Service<T> {
-    T read(UUID id);
-    List<T> readAll();
-    void save(T entity);
-    void delete(UUID id);
-    void edit(T entity);
+    T read(Integer id) throws ServiceException;
+
+    List<T> readAll() throws ServiceException;
+
+    void save(T entity) throws ServiceException;
+
+    void edit(T entity) throws ServiceException;
+
+    void delete(Integer id) throws ServiceException;
 }

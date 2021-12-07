@@ -1,43 +1,85 @@
+import dao.DaoException;
 import entity.Person;
-import entity.PersonType;
+import utils.db.Connector;
+import utils.json.read.JsonReader;
+import utils.json.read.PersonJsonReader;
+import utils.json.write.JsonWriter;
+import utils.json.write.PersonWriter;
 
-import java.sql.Connection;
-import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
+import java.text.ParseException;
 
 public class Main {
 
-    public static void main(String[] args) throws ClassNotFoundException, SQLException {
+    public static void main(String[] args) throws ClassNotFoundException, SQLException, DaoException, ParseException {
         Connector.init("org.postgresql.Driver", "jdbc:postgresql://localhost/airplane",
                 "postgres", "635756");
-        Connection c = Connector.getConnection();
-        Statement statement = c.createStatement();
-        statement.execute("INSERT INTO Flights (FlightName, Date_comp,  Travel_time) " +
-                "Values('3rdfdfd', 'rgfgrgrgrgrgd', 'gfgfdhthdbngnnttr')");
-        System.out.println("done");
-        ResultSet resultSet = statement.executeQuery("select * from flights;");
-        while(resultSet.next()){
-            System.out.println(resultSet.getString(1)+"\t"+resultSet.getString(2)
-                    +"\t"+resultSet.getString(3) +"\t"+resultSet.getString(4));
-        }
-        statement.execute("update flights set FlightName = '12345678' where FlightName = '12' and \n" +
-                "id = '382ff7be-3901-11ec-903b-145afc00fdab'; ");
-        resultSet = statement.executeQuery("select * from flights;");
-        System.out.println("done");
-        while(resultSet.next()){
-            System.out.println(resultSet.getString(1)+"\t"+resultSet.getString(2)
-                    +"\t"+resultSet.getString(3) +"\t"+resultSet.getString(4));
-        }
-        statement.execute("delete from flights where id = '382ff7be-3901-11ec-903b-145afc00fdab' ");
-        System.out.println("done");
-        resultSet = statement.executeQuery("select * from flights;");
-        while(resultSet.next()){
-            System.out.println(resultSet.getString(1)+"\t"+resultSet.getString(2)
-                    +"\t"+resultSet.getString(3) +"\t"+resultSet.getString(4));
-        }
-        c.close();
-        statement.close();
-        resultSet.close();
+        JsonReader<Person> personJsonReader = new PersonJsonReader();
+        personJsonReader.importToDBFromJson("7.airline.json", "persons");
+        JsonWriter<Person> personJsonWriter = new PersonWriter();
+        personJsonWriter.exportToJsonFromDB("persons");
+        //new MainView().runMainView();
+//        System.out.println(Arrays.stream(new Person[]{new Person(1 ,"alexei", PersonType.PILOT, true)}).
+//                allMatch(person -> {
+//                    try {
+//                        Person person1 = new PersonServiceImpl().read(person.getId());
+//                        System.out.println(person1);
+//                        System.out.println(person);
+//                        return person.equals(person1);
+//                    } catch (ServiceException e) {
+//                        e.printStackTrace();
+//                        return false;
+//                    }
+//                }));
+//        PersonDaoImpl personDao = new PersonDaoImpl();
+//        BrigadeDaoImpl brigadeDao = new BrigadeDaoImpl();
+//        FlightDaoImpl flightDao = new FlightDaoImpl();
+//        Brigade brigade1 = new Brigade();
+//        brigade1.addPerson(personDao.read(1));
+//        brigade1.addPerson(personDao.read(3));
+//        brigade1.addPerson(personDao.read(5));
+//        brigade1.addPerson(personDao.read(7));
+//        brigade1.addPerson(personDao.read(9));
+//        brigadeDao.create(brigade1);
+//        brigade1 = brigadeDao.read(1);
+//        Brigade brigade2 = new Brigade();
+//        brigade2.addPerson(personDao.read(2));
+//        brigade2.addPerson(personDao.read(4));
+//        brigade2.addPerson(personDao.read(6));
+//        brigade2.addPerson(personDao.read(8));
+//        brigade2.addPerson(personDao.read(10));
+//        brigadeDao.create(brigade2);
+//        brigade2 = brigadeDao.read(2);
+//        flightDao.create(new Flight(brigade1,"123"));
+//        flightDao.create(new Flight(brigade2,"123312321312"));
+//        List<? extends BaseEntity> baseEntities;
+//        baseEntities = personDao.readAll();
+//        baseEntities.forEach(System.out::println);
+//        System.out.println();
+//        baseEntities = brigadeDao.readAll();
+//        baseEntities.forEach(System.out::println);
+//        System.out.println();
+//        baseEntities = flightDao.readAll();
+//        baseEntities.forEach(System.out::println);
+        //List<Brigade> brigades = brigadeDao.readAll();
+        //brigades.forEach(System.out::println);
+        //System.out.println(brigade);
+        //brigade.addPerson(personDao.read(2));
+        //brigade.addPerson(personDao.read(4));
+        //brigade.addPerson(personDao.read(5));
+        //brigade.addPerson(personDao.read(1));
+        //brigade.addPerson(personDao.read(6));
+        //new BrigadeDaoImpl().create(brigade);
+//        JsonReader jr = new PersonJsonReader();
+//        List<Person> personList = jr.readJson("7.airline.json", "persons");
+//        personList.forEach(System.out::println);
+//        jr = new FlightJsonReader();
+//        System.out.println();
+//        List<Flight> flightList = jr.readJson("7.airline.json", "persons", "flights");
+//        flightList.forEach(System.out::println);
+//        JsonWriter jw = new PersonWriter();
+//        jw.writeJson(personList, "persons.json");
+//        jw = new FlightWriter();
+//        jw.writeJson(flightList, "flights.json");
     }
 }

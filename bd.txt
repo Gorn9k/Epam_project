@@ -2,7 +2,7 @@ CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
 
 CREATE TABLE Persons (
 	id uuid DEFAULT uuid_generate_v1(), 
-	personType text, 
+	personType text ,
 	personName text, 
 	birthday text, 
 	tel text, 
@@ -13,7 +13,8 @@ CREATE TABLE Flights (
 	id uuid DEFAULT uuid_generate_v1(), 
 	flightName text, 
 	date_comp text, 
-	travel_time text, 				
+	travel_time text,
+	id_brigade uuid,
 	PRIMARY KEY(id));
 					 
 CREATE TABLE Brigades (

@@ -1,19 +1,39 @@
 package entity;
 
-import java.util.UUID;
+import java.util.List;
 
-public class Person extends BaseEntity{
-    private Brigade brigade;
-    private PersonType personType;
+public class Person extends BaseEntity implements Comparable<Person>{
     private String personName;
-    private String birthday;
-    private String tel;
-    private String address;
+    private PersonType personType;
+    private boolean isFree = true;
+    private List<Flight> flights;
 
-    public Person(String personName, PersonType personType){
-        super();
+    public Person(){}
+
+    public Person(String personName, PersonType personType) {
         this.personName = personName;
         this.personType = personType;
+    }
+
+    public Person(Integer id, String personName, PersonType personType, boolean isFree) {
+        super(id);
+        this.personName = personName;
+        this.personType = personType;
+        this.isFree = isFree;
+    }
+
+    public Person(String personName, PersonType personType, boolean isFree) {
+        this.personName = personName;
+        this.personType = personType;
+        this.isFree = isFree;
+    }
+
+    public String getPersonName() {
+        return personName;
+    }
+
+    public void setPersonName(String personName) {
+        this.personName = personName;
     }
 
     public PersonType getPersonType() {
@@ -24,14 +44,27 @@ public class Person extends BaseEntity{
         this.personType = personType;
     }
 
+    public boolean isFree() {
+        return isFree;
+    }
+
+    public void setFree(boolean free) {
+        isFree = free;
+    }
+
     @Override
     public String toString() {
         return "Person{" +
-                "personType=" + personType +
+                "id=" + getId() +
                 ", personName='" + personName + '\'' +
-                ", birthday='" + birthday + '\'' +
-                ", tel='" + tel + '\'' +
-                ", address='" + address + '\'' +
+                ", personType=" + personType +
+                ", isFree=" + isFree +
+                ", flights=" + flights +
                 '}';
+    }
+
+    @Override
+    public int compareTo(Person o) {
+        return this.getPersonType().compareTo(o.getPersonType());
     }
 }
