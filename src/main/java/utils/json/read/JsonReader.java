@@ -1,11 +1,9 @@
 package utils.json.read;
 
 import com.google.gson.*;
-import entity.BaseEntity;
-import entity.Person;
+import entity.Entity;
 import service.Service;
 import service.ServiceException;
-import service.logic.PersonServiceImpl;
 
 import java.io.FileReader;
 import java.io.IOException;
@@ -13,7 +11,7 @@ import java.io.Reader;
 import java.util.ArrayList;
 import java.util.List;
 
-public abstract class JsonReader<T extends BaseEntity> {
+public abstract class JsonReader<T extends Entity> {
     protected Gson gson;
     protected Class<T> aClass;
     protected Service<T> service;

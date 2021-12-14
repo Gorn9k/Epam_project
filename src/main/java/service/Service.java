@@ -1,16 +1,16 @@
 package service;
 
 import java.util.List;
-import java.util.UUID;
+import java.util.Optional;
 
 public interface Service<T> {
-    T read(Integer id) throws ServiceException;
+    Optional<T> findById(Long id) throws ServiceException;
 
-    List<T> readAll() throws ServiceException;
+    List<T> findAll() throws ServiceException;
 
-    void save(T entity) throws ServiceException;
+    void create(List<T> entities) throws ServiceException;
 
     void edit(T entity) throws ServiceException;
 
-    void delete(Integer id) throws ServiceException;
+    void delete(Long id) throws ServiceException;
 }

@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class Brigade extends BaseEntity{
+public class Brigade extends Entity {
     private Person[] persons;
     private List<Flight> flights;
     private int iteration = 0;
@@ -17,21 +17,12 @@ public class Brigade extends BaseEntity{
     public Person[] getPersons() {
         Arrays.sort(persons);
         return persons;
-        //return Arrays.copyOf(persons, persons.length);
     }
 
     public void setPersons(Person[] persons) {
         if (this.persons.length == persons.length) {
             this.persons = persons;
         }
-    }
-
-    public List<Flight> getFlights() {
-        return flights;
-    }
-
-    public void setFlights(List<Flight> flights) {
-        this.flights = flights;
     }
 
     public void addPerson(Person person) {

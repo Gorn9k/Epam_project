@@ -6,41 +6,57 @@ import entity.Brigade;
 import entity.Flight;
 import entity.Person;
 import entity.PersonType;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+import utils.db.EntityCreator;
+import utils.db.StatementSetter;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
-import static utils.db.Connector.getConnection;
 
-public class BrigadeDaoImpl implements Dao<Brigade> {
+public class BrigadeDaoImpl extends BaseDaoImpl implements Dao<Brigade> {
+    private StatementSetter<Brigade> statementSetter;
+    private EntityCreator<Brigade> entityCreator;
+
+    public BrigadeDaoImpl(Connection connection) {
+        super(connection);
+        statementSetter = (statement, brigade) -> {
+            statement.setLong(1, brigade.getPersons()[0].getId());
+            statement.setLong(2, brigade.getPersons()[1].getId());
+            statement.setLong(3, brigade.getPersons()[2].getId());
+            statement.setLong(4, brigade.getPersons()[3].getId());
+            statement.setLong(5, brigade.getPersons()[4].getId());
+        };
+        entityCreator = resultSet -> {
+            Brigade brigade = new Brigade();
+            while (true) {
+                brigade.addPerson(new Person(resultSet.getString("personName"),
+                        PersonType.valueOf(resultSet.getString("personType")),
+                        resultSet.getBoolean("isFree")));
+                if (!resultSet.next()) {
+                    break;
+                }
+            }
+            return brigade;
+        };
+    }
 
     @Override
-    public Brigade read(Integer id) throws DaoException {
-        StringBuilder sqlForPersons = new StringBuilder("select persons.id, persons.personType, persons.personName, persons.isFree " +
-                "from (persons inner join brigades on persons.id = brigades.idPilot or persons.id = brigades.idNavigator or " +
-                "persons.id = brigades.idRadioman or persons.id = brigades.idFirstSteward or persons.id = brigades.idSecondSteward) " +
-                "where brigades.id = ");
-        StringBuilder sqlForFlights = new StringBuilder("select id, flightName, idBrigade from flights where idBrigade = ");
-        Brigade brigade = null;
-        try (PreparedStatement preparedStatementForPersons = getConnection().prepareStatement(String.valueOf(sqlForPersons.append(id)));
+    public Brigade read(Long id) throws DaoException {
+        String sqlForPersons = "select persons.id, persons.personType, persons.personName, persons.isFree " +
+                "from persons inner join brigades on persons.id = brigades.idPilot or persons.id = brigades.idNavigator or " +
+                "persons.id = brigades.idRadioman or persons.id = brigades.idFirstSteward or persons.id = brigades.idSecondSteward " +
+                "where brigades.id = " + id;
+        String sqlForFlights = "select id, flightName, idBrigade from flights where idBrigade = " + id;
+        Brigade brigade;
+        try (PreparedStatement preparedStatementForPersons = getConnection().prepareStatement(sqlForPersons);
              ResultSet resultSetForPersons = preparedStatementForPersons.executeQuery();
-             PreparedStatement preparedStatementForFlights = getConnection().prepareStatement(String.valueOf(sqlForFlights.append(id)));
+             PreparedStatement preparedStatementForFlights = getConnection().prepareStatement(sqlForFlights);
              ResultSet resultSetForFlights = preparedStatementForFlights.executeQuery()) {
             if (resultSetForPersons.next()) {
-                brigade = new Brigade();
+                brigade = entityCreator.createEntity(resultSetForPersons);
                 brigade.setId(id);
-                while (true) {
-                    brigade.addPerson(
-                            new Person(
-                                    resultSetForPersons.getString("personName"),
-                                    PersonType.valueOf(resultSetForPersons.getString("personType")),
-                                    resultSetForPersons.getBoolean("isFree")));
-                    if (!resultSetForPersons.next()) {
-                        break;
-                    }
-                }
+            }
+            else {
+                return null;
             }
             while (resultSetForFlights.next()) {
                 brigade.addFlight(
@@ -53,56 +69,31 @@ public class BrigadeDaoImpl implements Dao<Brigade> {
     }
 
     @Override
-    public void create(Brigade entity) throws DaoException {
-        String sql = "insert into brigades (id, idPilot, idNavigator, idRadioman, idFirstSteward, idSecondSteward) values(?, ?, ?, ?, ?, ?)";
-        try (PreparedStatement statement = getConnection().prepareStatement(sql)) {
-            Integer id = getMaxIdFromTable("brigades");
-            statement.setInt(1, id);
-            statement.setInt(2, entity.getPersons()[0].getId());
-            statement.setInt(3, entity.getPersons()[1].getId());
-            statement.setInt(4, entity.getPersons()[2].getId());
-            statement.setInt(5, entity.getPersons()[3].getId());
-            statement.setInt(6, entity.getPersons()[4].getId());
-            statement.executeUpdate();
-        } catch (SQLException e) {
-            throw new DaoException(e);
-        }
+    public void save(List<Brigade> brigades) throws DaoException {
+        String sql = "insert into brigades (idPilot, idNavigator, idRadioman, idFirstSteward, idSecondSteward) values(?, ?, ?, ?, ?)";
+        create(sql, brigades, getConnection(), statementSetter);
     }
 
     @Override
     public void update(Brigade entity) throws DaoException {
-        String sql = "update brigades set idPilot = ?, idNavigator = ?, idRadioman = ?, idFirstSteward = ?, idSecondSteward = ? where id = ?";
-        try (PreparedStatement statement = getConnection().prepareStatement(sql)) {
-            statement.setString(1, entity.getPersons()[0].getPersonType().getType());
-            statement.setString(2, entity.getPersons()[1].getPersonType().getType());
-            statement.setString(3, entity.getPersons()[2].getPersonType().getType());
-            statement.setString(4, entity.getPersons()[3].getPersonType().getType());
-            statement.setString(5, entity.getPersons()[4].getPersonType().getType());
-            statement.setInt(5, entity.getId());
-            statement.executeUpdate();
-        } catch (SQLException e) {
-            throw new DaoException(e);
-        }
+        String sql = "update brigades set idPilot = ?, idNavigator = ?, idRadioman = ?, idFirstSteward = ?, " +
+                "idSecondSteward = ? where id = " + entity.getId();
+        update(sql, entity, getConnection(), statementSetter);
     }
 
     @Override
-    public void delete(Integer id) throws DaoException {
-        String sql = "delete from brigades where id = ?";
-        try (PreparedStatement statement = getConnection().prepareStatement(sql)) {
-            statement.setInt(1, id);
-            statement.executeUpdate();
-        } catch (SQLException e) {
-            throw new DaoException(e);
-        }
+    public void delete(Long id) throws DaoException {
+        String sql = "delete from brigades where id = " + id;
+        delete(sql, getConnection());
     }
 
     @Override
     public List<Brigade> readAll() throws DaoException {
-        String sqlForBrigades = "select * from brigades";
+        String sqlForBrigades = "select id from brigades";
         try (Statement statement = getConnection().createStatement(); ResultSet resultSet = statement.executeQuery(sqlForBrigades)) {
             List<Brigade> brigades = new ArrayList<>();
             while (resultSet.next()) {
-                brigades.add(read(resultSet.getInt("id")));
+                brigades.add(read(resultSet.getLong("id")));
             }
             return brigades;
         } catch (SQLException e) {

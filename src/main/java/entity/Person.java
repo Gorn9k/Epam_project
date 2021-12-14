@@ -2,7 +2,7 @@ package entity;
 
 import java.util.List;
 
-public class Person extends BaseEntity implements Comparable<Person>{
+public class Person extends Entity implements Comparable<Person>{
     private String personName;
     private PersonType personType;
     private boolean isFree = true;
@@ -15,7 +15,7 @@ public class Person extends BaseEntity implements Comparable<Person>{
         this.personType = personType;
     }
 
-    public Person(Integer id, String personName, PersonType personType, boolean isFree) {
+    public Person(Long id, String personName, PersonType personType, boolean isFree) {
         super(id);
         this.personName = personName;
         this.personType = personType;

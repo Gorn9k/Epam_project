@@ -1,18 +1,10 @@
 package entity;
 
-import java.sql.Timestamp;
-
-public class Flight extends BaseEntity{
+public class Flight extends Entity {
     private Brigade brigade;
     private String flightName;
 
     public Flight(){}
-
-    public Flight(Integer id, Brigade brigade, String flightName){
-        super(id);
-        this.brigade = brigade;
-        this.flightName = flightName;
-    }
 
     public Flight(Brigade brigade, String flightName) {
         this.brigade = brigade;

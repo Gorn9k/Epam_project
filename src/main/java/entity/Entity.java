@@ -2,20 +2,20 @@ package entity;
 
 import java.util.Objects;
 
-public abstract class BaseEntity {
-    private Integer id;
+public abstract class Entity {
+    private Long id;
 
-    public BaseEntity(){}
+    public Entity(){}
 
-    public BaseEntity(Integer id) {
+    public Entity(Long id) {
         this.id = id;
     }
 
-    public Integer getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(Integer id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
@@ -23,7 +23,7 @@ public abstract class BaseEntity {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        BaseEntity that = (BaseEntity) o;
+        Entity that = (Entity) o;
         return Objects.equals(id, that.id);
     }
 

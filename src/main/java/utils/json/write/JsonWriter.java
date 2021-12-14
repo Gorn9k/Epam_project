@@ -3,17 +3,16 @@ package utils.json.write;
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import entity.BaseEntity;
+import entity.Entity;
 import service.Service;
 import service.ServiceException;
-import service.logic.PersonServiceImpl;
 
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.Writer;
 import java.util.List;
 
-public class JsonWriter<T extends BaseEntity> {
+public class JsonWriter<T extends Entity> {
     protected Gson gson;
     protected String propName;
     protected Service<T> service;

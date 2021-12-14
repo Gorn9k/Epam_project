@@ -2,20 +2,22 @@ package service.logic;
 
 import dao.DaoException;
 import dao.postgresql.PersonDaoImpl;
+import entity.Entity;
 import entity.Person;
 import service.Service;
 import service.ServiceException;
+
 import java.util.List;
+import java.util.Optional;
 
 public class PersonServiceImpl implements Service<Person> {
     private PersonDaoImpl personDao;
 
     @Override
-    public Person read(Integer id) throws ServiceException {
-        personDao = new PersonDaoImpl();
+    public Optional<Person> findById(Long id) throws ServiceException {
         try {
             if (id != null) {
-                return personDao.read(id);
+                return Optional.ofNullable(personDao.read(id));
             } else {
                 throw new ServiceException();
             }
@@ -25,8 +27,7 @@ public class PersonServiceImpl implements Service<Person> {
     }
 
     @Override
-    public List<Person> readAll() throws ServiceException {
-        personDao = new PersonDaoImpl();
+    public List<Person> findAll() throws ServiceException {
         try {
             return personDao.readAll();
         } catch (DaoException daoException) {
@@ -35,14 +36,12 @@ public class PersonServiceImpl implements Service<Person> {
     }
 
     @Override
-    public void save(Person entity) throws ServiceException {
-        personDao = new PersonDaoImpl();
+    public void create(List<Person> entities) throws ServiceException {
         try {
-            if (entity != null && entity.getPersonName() != null && entity.getPersonType() != null && entity.isFree()) {
-                personDao.create(entity);
-            } else {
-                throw new ServiceException();
+            if (entities == null || entities.isEmpty()) {
+                throw new ServiceException("There are no users to store");
             }
+            personDao.save(entities);
         } catch (DaoException daoException) {
             throw new ServiceException(daoException);
         }
@@ -50,7 +49,6 @@ public class PersonServiceImpl implements Service<Person> {
 
     @Override
     public void edit(Person entity) throws ServiceException {
-        personDao = new PersonDaoImpl();
         try {
             if (entity != null && entity.getId() != null) {
                 Person person = personDao.read(entity.getId());
@@ -69,10 +67,13 @@ public class PersonServiceImpl implements Service<Person> {
     }
 
     @Override
-    public void delete(Integer id) throws ServiceException {
-        personDao = new PersonDaoImpl();
+    public void delete(Long id) throws ServiceException {
         try {
-            personDao.delete(id);
+            if (id != null) {
+                personDao.delete(id);
+            } else {
+                throw new ServiceException();
+            }
         } catch (DaoException daoException) {
             throw new ServiceException(daoException);
         }
