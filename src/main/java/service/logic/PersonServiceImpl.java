@@ -6,12 +6,18 @@ import entity.Entity;
 import entity.Person;
 import service.Service;
 import service.ServiceException;
+import utils.db.Connector;
 
+import java.sql.SQLException;
 import java.util.List;
 import java.util.Optional;
 
 public class PersonServiceImpl implements Service<Person> {
     private PersonDaoImpl personDao;
+
+    public PersonServiceImpl() throws SQLException {
+        personDao = new PersonDaoImpl(Connector.getConnection());
+    }
 
     @Override
     public Optional<Person> findById(Long id) throws ServiceException {
@@ -74,6 +80,15 @@ public class PersonServiceImpl implements Service<Person> {
             } else {
                 throw new ServiceException();
             }
+        } catch (DaoException daoException) {
+            throw new ServiceException(daoException);
+        }
+    }
+
+    @Override
+    public Long findMaxId() throws ServiceException {
+        try {
+            return personDao.getMaxId();
         } catch (DaoException daoException) {
             throw new ServiceException(daoException);
         }

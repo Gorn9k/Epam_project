@@ -1,0 +1,19 @@
+{
+  "flights": [
+    {
+      "flightName": "London-Paris"
+    },
+    {
+      "flightName": "Paris-London"
+    },
+    {
+      "flightName": "London-Dublin"
+    },
+    {
+      "flightName": "London-Amsterdam"
+    },
+    {
+      "flightName": "London-Copenhagen"
+    }
+  ]
+}

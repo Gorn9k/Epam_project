@@ -2,13 +2,11 @@ package utils.json.read;
 
 import com.google.gson.Gson;
 import entity.Flight;
+import service.ServiceException;
 import service.logic.FlightServiceImpl;
 
-public class FlightJsonReader extends JsonReader<Flight> {
+import java.util.List;
 
-    public FlightJsonReader() {
-        gson = new Gson();
-        service = new FlightServiceImpl();
-        aClass = Flight.class;
-    }
+public class FlightJsonReader {
+
 }

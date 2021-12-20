@@ -1,0 +1,58 @@
+{
+  "brigades": [
+    {
+      "persons": [
+        "Patrick Goddard",
+        "Thomas Nicholls",
+        "Jordan Berry",
+        "Elise Kerr"
+      ],
+      "flights": [
+        {
+          "flightName": "London-Paris"
+        },
+        {
+          "flightName": "Paris-London"
+        }
+      ]
+    },
+    {
+      "persons": [
+        "Henry Forster",
+        "Samantha Chan",
+        "Amelia Burgess",
+        "Jasmine Field",
+        "Charlotte Daly"
+      ],
+      "flights": [
+        {
+          "flightName": "London-Dublin"
+        }
+      ]
+    },
+    {
+      "persons": [
+        "Scott Sanders",
+        "Connor Bryan",
+        "John Potter"
+      ],
+      "flights": [
+        {
+          "flightName": "London-Amsterdam"
+        }
+      ]
+    },
+    {
+      "persons": [
+        "Maya Wilkinson",
+        "Leo Armstrong",
+        "Alexander Hayward"
+      ],
+      "flights": [
+        {
+          "flightName": "London-Copenhagen"
+        }
+      ]
+    }
+  ]
+}

@@ -5,8 +5,10 @@ import entity.PersonType;
 import service.ServiceException;
 import service.logic.PersonServiceImpl;
 
+import java.sql.SQLException;
 import java.util.InputMismatchException;
 import java.util.List;
+import java.util.Optional;
 import java.util.Scanner;
 
 public class FlightView {
@@ -14,14 +16,14 @@ public class FlightView {
 
     public void showAllPersons() {
         try {
-            List<Person> persons = new PersonServiceImpl().readAll();
+            List<Person> persons = new PersonServiceImpl().findAll();
             if (!persons.isEmpty()) {
                 System.out.println("\nList of persons:\n");
                 persons.forEach(System.out::println);
             } else {
                 System.out.println("\nNo person found in the database!");
             }
-        } catch (ServiceException serviceException) {
+        } catch (ServiceException | SQLException serviceException) {
             System.out.println(serviceException.getMessage());
         }
     }
@@ -29,13 +31,13 @@ public class FlightView {
     public void showPersonById() {
         System.out.println("\nEnter the id of the person you want to find:");
         try {
-            Person person = new PersonServiceImpl().read(scanner.nextInt());
+            Optional<Person> person = new PersonServiceImpl().findById(scanner.nextLong());
             if (person != null) {
                 System.out.println("\n" + person);
             } else {
                 System.out.println("\nNo person with this id found in the database!");
             }
-        } catch (ServiceException serviceException) {
+        } catch (ServiceException | SQLException serviceException) {
             System.out.println(serviceException.getMessage());
         } catch (InputMismatchException inputMismatchException) {
             System.out.println("\nIncorrectly entered Id.");
@@ -44,13 +46,13 @@ public class FlightView {
     }
 
     public void createPerson() {
-        try {
+        /*try {
             Person person = new Person();
             System.out.println("\nEnter person's name:");
             person.setPersonName(scanner.next());
             System.out.println("Enter the position of the person:");
             person.setPersonType(PersonType.valueOf(scanner.next().toUpperCase()));
-            new PersonServiceImpl().save(person);
+            new PersonServiceImpl().create(person);
             System.out.println("\nSaving to the database was successful!");
         } catch (IllegalArgumentException illegalArgumentException) {
             System.out.println("\nThere is no such position in the system.");
@@ -59,11 +61,11 @@ public class FlightView {
         } catch (InputMismatchException inputMismatchException) {
             System.out.println("\nIncorrectly entered Id.");
             scanner.nextLine();
-        }
+        }*/
     }
 
     public void editPerson() {
-        try {
+        /*try {
             System.out.println("\nEnter the id of the person you want to change:");
             Person person = new PersonServiceImpl().read(scanner.nextInt());
             if (person != null) {
@@ -138,11 +140,11 @@ public class FlightView {
             scanner.nextLine();
         } catch (IllegalArgumentException illegalArgumentException) {
             System.out.println("\nThere is no such position in the system.");
-        }
+        }*/
     }
 
     public void deletePerson() {
-        System.out.println("\nEnter the id of the person you want to remove:");
+        /*System.out.println("\nEnter the id of the person you want to remove:");
         try {
             new PersonServiceImpl().delete(scanner.nextInt());
             System.out.println("\nRemoval was successful!");
@@ -151,7 +153,7 @@ public class FlightView {
         } catch (InputMismatchException inputMismatchException) {
             System.out.println("\nIncorrectly entered Id.");
             scanner.nextLine();
-        }
+        }*/
     }
 
     public void run() {

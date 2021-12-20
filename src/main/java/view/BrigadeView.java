@@ -11,7 +11,7 @@ import java.util.Scanner;
 
 public class BrigadeView {
     Scanner scanner = new Scanner(System.in);
-
+/*
     public void showAllPersons() {
         try {
             List<Person> persons = new PersonServiceImpl().readAll();
@@ -210,5 +210,5 @@ public class BrigadeView {
                 }
             }
         }
-    }
+    }*/
 }

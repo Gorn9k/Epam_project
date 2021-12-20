@@ -9,7 +9,7 @@ import java.util.InputMismatchException;
 import java.util.List;
 import java.util.Scanner;
 
-public class UtilView {
+public class UtilView {/*
     Scanner scanner = new Scanner(System.in);
 
     public void showAllPersons() {
@@ -210,5 +210,5 @@ public class UtilView {
                 }
             }
         }
-    }
+    }*/
 }

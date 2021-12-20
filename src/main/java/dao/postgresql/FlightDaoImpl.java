@@ -36,7 +36,7 @@ public class FlightDaoImpl extends BaseDaoImpl implements Dao<Flight> {
                 "from persons inner join brigades on persons.id = brigades.idPilot or persons.id = brigades.idNavigator or " +
                 "persons.id = brigades.idRadioman or persons.id = brigades.idFirstSteward or persons.id = brigades.idSecondSteward " +
                 "where brigades.id = ");
-        try (PreparedStatement preparedStatementForFlights = getConnection().prepareStatement(sqlForFlights + id);
+        try (PreparedStatement preparedStatementForFlights = getConnection().prepareStatement(sqlForFlights);
              ResultSet resultSetForFlights = preparedStatementForFlights.executeQuery()) {
             Flight flight = null;
             Brigade brigade;
@@ -94,5 +94,11 @@ public class FlightDaoImpl extends BaseDaoImpl implements Dao<Flight> {
         } catch (SQLException e) {
             throw new DaoException(e);
         }
+    }
+
+    @Override
+    public Long getMaxId() throws DaoException {
+        String sql = "select max(id) from flights";
+        return getMaxId(sql, getConnection());
     }
 }

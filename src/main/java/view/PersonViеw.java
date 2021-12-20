@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.Scanner;
 
 public class PersonViеw {
-
+/*
     Scanner scanner = new Scanner(System.in);
 
     public void showAllPersons() {
@@ -210,5 +210,5 @@ public class PersonViеw {
                 }
             }
         }
-    }
+    }*/
 }

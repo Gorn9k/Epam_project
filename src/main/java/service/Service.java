@@ -13,4 +13,6 @@ public interface Service<T> {
     void edit(T entity) throws ServiceException;
 
     void delete(Long id) throws ServiceException;
+
+    Long findMaxId() throws ServiceException;
 }

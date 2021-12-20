@@ -16,6 +16,8 @@ public interface Dao<T extends Entity> {
 
     List<T> readAll() throws DaoException;
 
+    Long getMaxId() throws DaoException;
+
     default void create(String sql, List<T> entities, Connection connection, StatementSetter<T> statementSetter) throws DaoException {
         if (entities == null || entities.size() == 0) {
             throw new DaoException("There is no users for create");
@@ -44,6 +46,18 @@ public interface Dao<T extends Entity> {
     default void delete(String sql, Connection connection) throws DaoException {
         try (Statement statement = connection.createStatement()) {
             statement.executeUpdate(sql);
+        } catch(SQLException e) {
+            throw new DaoException(e);
+        }
+    }
+
+    default Long getMaxId(String sql, Connection connection) throws DaoException {
+        try (Statement statement = connection.createStatement(); ResultSet resultSet = statement.executeQuery(sql)) {
+            if (resultSet.next()) {
+                return resultSet.getLong(1) + 1;
+            } else {
+                throw new DaoException();
+            }
         } catch(SQLException e) {
             throw new DaoException(e);
         }

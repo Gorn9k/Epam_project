@@ -78,4 +78,10 @@ public class PersonDaoImpl extends BaseDaoImpl implements Dao<Person> {
             throw new DaoException(e);
         }
     }
+
+    @Override
+    public Long getMaxId() throws DaoException {
+        String sql = "select max(id) from persons";
+        return getMaxId(sql, getConnection());
+    }
 }

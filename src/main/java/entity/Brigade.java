@@ -1,42 +1,37 @@
 package entity;
 
+import com.google.gson.annotations.Expose;
+
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 public class Brigade extends Entity {
-    private Person[] persons;
+    public static final byte DEFAULT_SIZE_OF_BRIGADE = 5;
+    @Expose
+    private List<Person> persons;
+    @Expose
     private List<Flight> flights;
-    private int iteration = 0;
 
     public Brigade() {
-        persons = new Person[5];
+        persons = new ArrayList<>();
         flights = new ArrayList<>();
     }
 
-    public Person[] getPersons() {
-        Arrays.sort(persons);
+    public void setPersons(List<Person> persons) {
+        if (persons != null && this.persons.size() == persons.size()) {
+            this.persons = persons;
+            Collections.sort(this.persons);
+        }
+    }
+
+    public List<Person> getPersons() {
         return persons;
     }
 
-    public void setPersons(Person[] persons) {
-        if (this.persons.length == persons.length) {
-            this.persons = persons;
-        }
-    }
-
-    public void addPerson(Person person) {
-        if (iteration != persons.length) {
-            this.persons[iteration++] = person;
-        }
-    }
-
-    public void addFlight(Flight flight) {
-        this.flights.add(flight);
-    }
-
-    public int getIteration() {
-        return iteration;
+    public List<Flight> getFlights() {
+        return flights;
     }
 
     @Override

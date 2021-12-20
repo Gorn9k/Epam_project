@@ -1,12 +1,22 @@
 package entity;
 
+import com.google.gson.annotations.Expose;
+
 import java.util.List;
 
 public class Person extends Entity implements Comparable<Person>{
+    @Expose
     private String personName;
+    @Expose
     private PersonType personType;
+    @Expose
     private boolean isFree = true;
+    @Expose(serialize = false)
     private List<Flight> flights;
+
+    public List<Flight> getFlights() {
+        return flights;
+    }
 
     public Person(){}
 
@@ -59,7 +69,7 @@ public class Person extends Entity implements Comparable<Person>{
                 ", personName='" + personName + '\'' +
                 ", personType=" + personType +
                 ", isFree=" + isFree +
-                ", flights=" + flights +
+                //", flights=" + flights +
                 '}';
     }
 

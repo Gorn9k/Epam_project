@@ -30,7 +30,7 @@ public class JsonWriter<T extends Entity> {
 
     public void exportToJsonFromDB(String filePathName) {
         try {
-            writeJson(service.readAll(), filePathName);
+            writeJson(service.findAll(), filePathName);
         } catch (ServiceException e) {
             e.printStackTrace();
         }

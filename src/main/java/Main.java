@@ -1,8 +1,8 @@
 import dao.DaoException;
-import entity.Person;
+import service.ServiceException;
 import utils.db.Connector;
-import utils.json.read.JsonReader;
-import utils.json.read.PersonJsonReader;
+import utils.json.write.BrigadeWriter;
+import utils.json.write.FlightWriter;
 import utils.json.write.JsonWriter;
 import utils.json.write.PersonWriter;
 
@@ -11,13 +11,17 @@ import java.text.ParseException;
 
 public class Main {
 
-    public static void main(String[] args) throws ClassNotFoundException, SQLException, DaoException, ParseException {
+    public static void main(String[] args) throws ClassNotFoundException, SQLException, DaoException, ParseException, ServiceException {
         Connector.init("org.postgresql.Driver", "jdbc:postgresql://localhost/airplane",
                 "postgres", "635756");
-        JsonReader<Person> personJsonReader = new PersonJsonReader();
-        personJsonReader.importToDBFromJson("7.airline.json", "persons");
-        JsonWriter<Person> personJsonWriter = new PersonWriter();
-        personJsonWriter.exportToJsonFromDB("persons");
+        //JsonReader jsonReader = new JsonReader();
+        //jsonReader.importToDBFromJson("7.airline.json", "persons");
+        JsonWriter jsonWriter = new PersonWriter();
+        jsonWriter.exportToJsonFromDB("persons.json");
+        jsonWriter = new FlightWriter();
+        jsonWriter.exportToJsonFromDB("flights.json");
+        jsonWriter = new BrigadeWriter();
+        jsonWriter.exportToJsonFromDB("brigades.json");
         //new MainView().runMainView();
 //        System.out.println(Arrays.stream(new Person[]{new Person(1 ,"alexei", PersonType.PILOT, true)}).
 //                allMatch(person -> {

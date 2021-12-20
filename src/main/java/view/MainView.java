@@ -15,7 +15,7 @@ public class MainView {
                     "3. Brigades management\n" +
                     "4. Flights management\n" +
                     "5. Quit the application");
-            switch (scanner.nextInt()) {
+            /*switch (scanner.nextInt()) {
                 case 1:
                     new UtilView().run();
                     break;
@@ -33,7 +33,7 @@ public class MainView {
                     break;
                 default:
                     System.out.println("\nInvalid number! Enter a number between 1 and 5.");
-            }
+            }*/
         }
     }
 }

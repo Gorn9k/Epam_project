@@ -1,0 +1,114 @@
+{
+  "persons": [
+    {
+      "personName": "Freddie O\u0027Donnell",
+      "personType": "DISPATCHER",
+      "isFree": true
+    },
+    {
+      "personName": "Bradley Archer",
+      "personType": "ADMINISTRATOR",
+      "isFree": true
+    },
+    {
+      "personName": "Patrick Goddard",
+      "personType": "PILOT",
+      "isFree": false
+    },
+    {
+      "personName": "Henry Forster",
+      "personType": "PILOT",
+      "isFree": false
+    },
+    {
+      "personName": "Scott Sanders",
+      "personType": "PILOT",
+      "isFree": false
+    },
+    {
+      "personName": "Maya Wilkinson",
+      "personType": "PILOT",
+      "isFree": false
+    },
+    {
+      "personName": "Daniel Porter",
+      "personType": "PILOT",
+      "isFree": true
+    },
+    {
+      "personName": "Thomas Nicholls",
+      "personType": "NAVIGATOR",
+      "isFree": false
+    },
+    {
+      "personName": "Samantha Chan",
+      "personType": "NAVIGATOR",
+      "isFree": false
+    },
+    {
+      "personName": "Connor Bryan",
+      "personType": "NAVIGATOR",
+      "isFree": false
+    },
+    {
+      "personName": "Leo Armstrong",
+      "personType": "NAVIGATOR",
+      "isFree": false
+    },
+    {
+      "personName": "Oliver Talbot",
+      "personType": "NAVIGATOR",
+      "isFree": true
+    },
+    {
+      "personName": "Jordan Berry",
+      "personType": "RADIOMAN",
+      "isFree": false
+    },
+    {
+      "personName": "Amelia Burgess",
+      "personType": "RADIOMAN",
+      "isFree": false
+    },
+    {
+      "personName": "John Potter",
+      "personType": "RADIOMAN",
+      "isFree": false
+    },
+    {
+      "personName": "Alexander Hayward",
+      "personType": "RADIOMAN",
+      "isFree": false
+    },
+    {
+      "personName": "Jonathan Collins",
+      "personType": "RADIOMAN",
+      "isFree": true
+    },
+    {
+      "personName": "Elise Kerr",
+      "personType": "STEWARD",
+      "isFree": false
+    },
+    {
+      "personName": "Jasmine Field",
+      "personType": "STEWARD",
+      "isFree": false
+    },
+    {
+      "personName": "Charlotte Daly",
+      "personType": "STEWARD",
+      "isFree": false
+    },
+    {
+      "personName": "Sophie Walsh",
+      "personType": "STEWARD",
+      "isFree": true
+    },
+    {
+      "personName": "Anna Ward",
+      "personType": "STEWARD",
+      "isFree": true
+    }
+  ]
+}

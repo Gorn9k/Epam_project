@@ -7,24 +7,25 @@ import entity.Brigade;
 import jdk.nashorn.internal.ir.SplitReturn;
 import service.Service;
 import service.ServiceException;
+import utils.db.Connector;
 
+import java.sql.SQLException;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 public class BrigadeServiceImpl implements Service<Brigade> {
     private BrigadeDaoImpl brigadeDao;
-    private PersonDaoImpl personDao;
 
-    public BrigadeServiceImpl() {
-        this.brigadeDao = new BrigadeDaoImpl();
-        this.personDao = new PersonDaoImpl();
+    public BrigadeServiceImpl() throws SQLException {
+        brigadeDao = new BrigadeDaoImpl(Connector.getConnection());
     }
 
     @Override
-    public Brigade read(Integer id) throws ServiceException {
+    public Optional<Brigade> findById(Long id) throws ServiceException {
         try {
             if (id != null) {
-                return brigadeDao.read(id);
+                return Optional.ofNullable(brigadeDao.read(id));
             } else {
                 throw new ServiceException();
             }
@@ -34,7 +35,7 @@ public class BrigadeServiceImpl implements Service<Brigade> {
     }
 
     @Override
-    public List<Brigade> readAll() throws ServiceException {
+    public List<Brigade> findAll() throws ServiceException {
         try {
             return brigadeDao.readAll();
         } catch (DaoException daoException) {
@@ -43,13 +44,9 @@ public class BrigadeServiceImpl implements Service<Brigade> {
     }
 
     @Override
-    public void save(Brigade entity) throws ServiceException {
+    public void create(List<Brigade> entities) throws ServiceException {
         try {
-            if (entity != null && entity.getPersons().length == entity.getIteration()) {
-                brigadeDao.create(entity);
-            } else {
-                throw new ServiceException();
-            }
+            brigadeDao.save(entities);
         } catch (DaoException daoException) {
             throw new ServiceException(daoException);
         }
@@ -72,9 +69,18 @@ public class BrigadeServiceImpl implements Service<Brigade> {
     }
 
     @Override
-    public void delete(Integer id) throws ServiceException {
+    public void delete(Long id) throws ServiceException {
         try {
             brigadeDao.delete(id);
+        } catch (DaoException daoException) {
+            throw new ServiceException(daoException);
+        }
+    }
+
+    @Override
+    public Long findMaxId() throws ServiceException {
+        try {
+            return brigadeDao.getMaxId();
         } catch (DaoException daoException) {
             throw new ServiceException(daoException);
         }

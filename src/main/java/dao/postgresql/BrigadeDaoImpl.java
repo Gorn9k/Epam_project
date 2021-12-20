@@ -8,6 +8,7 @@ import entity.Person;
 import entity.PersonType;
 import utils.db.EntityCreator;
 import utils.db.StatementSetter;
+
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -19,16 +20,14 @@ public class BrigadeDaoImpl extends BaseDaoImpl implements Dao<Brigade> {
     public BrigadeDaoImpl(Connection connection) {
         super(connection);
         statementSetter = (statement, brigade) -> {
-            statement.setLong(1, brigade.getPersons()[0].getId());
-            statement.setLong(2, brigade.getPersons()[1].getId());
-            statement.setLong(3, brigade.getPersons()[2].getId());
-            statement.setLong(4, brigade.getPersons()[3].getId());
-            statement.setLong(5, brigade.getPersons()[4].getId());
+            for (int i = 0; i < brigade.getPersons().size(); i++) {
+                statement.setLong(i + 1, brigade.getPersons().get(i).getId());
+            }
         };
         entityCreator = resultSet -> {
             Brigade brigade = new Brigade();
             while (true) {
-                brigade.addPerson(new Person(resultSet.getString("personName"),
+                brigade.getPersons().add(new Person(resultSet.getString("personName"),
                         PersonType.valueOf(resultSet.getString("personType")),
                         resultSet.getBoolean("isFree")));
                 if (!resultSet.next()) {
@@ -54,12 +53,11 @@ public class BrigadeDaoImpl extends BaseDaoImpl implements Dao<Brigade> {
             if (resultSetForPersons.next()) {
                 brigade = entityCreator.createEntity(resultSetForPersons);
                 brigade.setId(id);
-            }
-            else {
+            } else {
                 return null;
             }
             while (resultSetForFlights.next()) {
-                brigade.addFlight(
+                brigade.getFlights().add(
                         new Flight(brigade, resultSetForFlights.getString("flightName")));
             }
             return brigade;
@@ -70,8 +68,32 @@ public class BrigadeDaoImpl extends BaseDaoImpl implements Dao<Brigade> {
 
     @Override
     public void save(List<Brigade> brigades) throws DaoException {
-        String sql = "insert into brigades (idPilot, idNavigator, idRadioman, idFirstSteward, idSecondSteward) values(?, ?, ?, ?, ?)";
-        create(sql, brigades, getConnection(), statementSetter);
+        boolean isDifferent = brigades.stream().anyMatch(brigade -> brigade.getPersons().size() != Brigade.DEFAULT_SIZE_OF_BRIGADE);
+        if (isDifferent) {
+            for (Brigade brigade : brigades) {
+                List<Brigade> brigadeList = new ArrayList<Brigade>() {{
+                    add(brigade);
+                }};
+                String sql;
+                switch (brigade.getPersons().size()) {
+                    case 3:
+                        sql = "insert into brigades (idPilot, idNavigator, idRadioman) values(?, ?, ?)";
+                        create(sql, brigadeList, getConnection(), statementSetter);
+                        break;
+                    case 4:
+                        sql = "insert into brigades (idPilot, idNavigator, idRadioman, idFirstSteward) values(?, ?, ?, ?)";
+                        create(sql, brigadeList, getConnection(), statementSetter);
+                        break;
+                    case 5:
+                        sql = "insert into brigades (idPilot, idNavigator, idRadioman, idFirstSteward, idSecondSteward) values(?, ?, ?, ?, ?)";
+                        create(sql, brigadeList, getConnection(), statementSetter);
+                        break;
+                }
+            }
+        } else {
+            String sql = "insert into brigades (idPilot, idNavigator, idRadioman, idFirstSteward, idSecondSteward) values(?, ?, ?, ?, ?)";
+            create(sql, brigades, getConnection(), statementSetter);
+        }
     }
 
     @Override
@@ -99,5 +121,11 @@ public class BrigadeDaoImpl extends BaseDaoImpl implements Dao<Brigade> {
         } catch (SQLException e) {
             throw new DaoException(e);
         }
+    }
+
+    @Override
+    public Long getMaxId() throws DaoException {
+        String sql = "select max(id) from brigades";
+        return getMaxId(sql, getConnection());
     }
 }
