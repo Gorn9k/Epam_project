@@ -1,8 +1,5 @@
 package dao.postgresql;
 
-import dao.Dao;
-import entity.Entity;
-
 import java.sql.Connection;
 
 abstract public class BaseDaoImpl {

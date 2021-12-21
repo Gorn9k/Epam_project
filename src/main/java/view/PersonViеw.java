@@ -4,17 +4,23 @@ import entity.Person;
 import entity.PersonType;
 import service.ServiceException;
 import service.logic.PersonServiceImpl;
-import java.util.InputMismatchException;
-import java.util.List;
-import java.util.Scanner;
+
+import java.sql.SQLException;
+import java.util.*;
 
 public class PersonViеw {
-/*
-    Scanner scanner = new Scanner(System.in);
 
-    public void showAllPersons() {
+    private Scanner scanner;
+    private PersonServiceImpl personService;
+
+    public PersonViеw() throws SQLException {
+        scanner = new Scanner(System.in);
+        personService = new PersonServiceImpl();
+    }
+
+    private void showAllPersons() {
         try {
-            List<Person> persons = new PersonServiceImpl().readAll();
+            List<Person> persons = personService.findAll();
             if (!persons.isEmpty()) {
                 System.out.println("\nList of persons:\n");
                 persons.forEach(System.out::println);
@@ -26,10 +32,10 @@ public class PersonViеw {
         }
     }
 
-    public void showPersonById() {
+    private void showPersonById() {
         System.out.println("\nEnter the id of the person you want to find:");
         try {
-            Person person = new PersonServiceImpl().read(scanner.nextInt());
+            Person person = personService.findById(scanner.nextLong());
             if (person != null) {
                 System.out.println("\n" + person);
             } else {
@@ -43,14 +49,15 @@ public class PersonViеw {
         }
     }
 
-    public void createPerson() {
+    private void createPerson() {
         try {
             Person person = new Person();
             System.out.println("\nEnter person's name:");
             person.setPersonName(scanner.next());
             System.out.println("Enter the position of the person:");
             person.setPersonType(PersonType.valueOf(scanner.next().toUpperCase()));
-            new PersonServiceImpl().save(person);
+            List<Person> personList = new ArrayList<Person>(){{add(person);}};
+            personService.create(personList);
             System.out.println("\nSaving to the database was successful!");
         } catch (IllegalArgumentException illegalArgumentException) {
             System.out.println("\nThere is no such position in the system.");
@@ -62,10 +69,10 @@ public class PersonViеw {
         }
     }
 
-    public void editPerson() {
+    private void editPerson() {
         try {
             System.out.println("\nEnter the id of the person you want to change:");
-            Person person = new PersonServiceImpl().read(scanner.nextInt());
+            Person person = personService.findById(scanner.nextLong());
             if (person != null) {
                 System.out.println("\nSelect an option for the operation (enter a number):\n" +
                         "1. Complete change of data about a person\n" +
@@ -126,7 +133,7 @@ public class PersonViеw {
                     default:
                         System.out.println("\nInvalid number! Enter a number between 1 and 3.");
                 }
-                new PersonServiceImpl().edit(person);
+                personService.edit(person);
                 System.out.println("\nThe persona change was successful!");
             } else {
                 System.out.println("\nNo person with this id found in the database!");
@@ -141,10 +148,10 @@ public class PersonViеw {
         }
     }
 
-    public void deletePerson() {
+    private void deletePerson() {
         System.out.println("\nEnter the id of the person you want to remove:");
         try {
-            new PersonServiceImpl().delete(scanner.nextInt());
+            personService.delete(scanner.nextLong());
             System.out.println("\nRemoval was successful!");
         } catch (ServiceException serviceException) {
             System.out.println(serviceException.getMessage());
@@ -210,5 +217,5 @@ public class PersonViеw {
                 }
             }
         }
-    }*/
+    }
 }

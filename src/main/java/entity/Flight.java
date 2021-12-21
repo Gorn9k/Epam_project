@@ -1,7 +1,6 @@
 package entity;
 
 import com.google.gson.annotations.Expose;
-
 import java.util.Objects;
 
 public class Flight extends Entity {
@@ -51,7 +50,7 @@ public class Flight extends Entity {
         return "Flight{" +
                 "id=" + getId() +
                 ", flightName='" + flightName + '\'' +
-                //", brigade='" + brigade + '\'' +
+                ", brigade='" + brigade.getId() + '\'' +
                 '}';
     }
 }

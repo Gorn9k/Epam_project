@@ -2,10 +2,10 @@ package utils.json.write;
 
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
+import dao.postgresql.BrigadeDaoImpl;
 import entity.Brigade;
 import entity.Person;
-import service.logic.BrigadeServiceImpl;
-
+import utils.db.Connector;
 import java.lang.reflect.Type;
 import java.sql.SQLException;
 import java.util.List;
@@ -16,7 +16,7 @@ public class BrigadeWriter extends JsonWriter<Brigade>{
         GsonBuilder gsonBuilder = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().
                 registerTypeAdapter(personsListType, new BrigadeWriterSerializer()).setPrettyPrinting();
         gson = gsonBuilder.create();
-        service = new BrigadeServiceImpl();
+        dao = new BrigadeDaoImpl(Connector.getConnection());
         propName = "brigades";
     }
 }

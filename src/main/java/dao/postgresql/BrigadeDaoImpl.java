@@ -8,7 +8,6 @@ import entity.Person;
 import entity.PersonType;
 import utils.db.EntityCreator;
 import utils.db.StatementSetter;
-
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -27,7 +26,8 @@ public class BrigadeDaoImpl extends BaseDaoImpl implements Dao<Brigade> {
         entityCreator = resultSet -> {
             Brigade brigade = new Brigade();
             while (true) {
-                brigade.getPersons().add(new Person(resultSet.getString("personName"),
+                brigade.getPersons().add(new Person(resultSet.getLong("id"),
+                        resultSet.getString("personName"),
                         PersonType.valueOf(resultSet.getString("personType")),
                         resultSet.getBoolean("isFree")));
                 if (!resultSet.next()) {

@@ -1,16 +1,16 @@
 package utils.json.write;
 
 import com.google.gson.GsonBuilder;
+import dao.postgresql.PersonDaoImpl;
 import entity.Person;
-import service.logic.PersonServiceImpl;
-
+import utils.db.Connector;
 import java.sql.SQLException;
 
 public class PersonWriter extends JsonWriter<Person> {
     public PersonWriter() throws SQLException {
         GsonBuilder gsonBuilder = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().setPrettyPrinting();
         gson = gsonBuilder.create();
-        service = new PersonServiceImpl();
+        dao = new PersonDaoImpl(Connector.getConnection());
         propName = "persons";
     }
 }

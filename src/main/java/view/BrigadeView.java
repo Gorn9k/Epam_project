@@ -1,39 +1,52 @@
 package view;
 
+import entity.Brigade;
+import entity.Flight;
 import entity.Person;
 import entity.PersonType;
 import service.ServiceException;
+import service.logic.BrigadeServiceImpl;
 import service.logic.PersonServiceImpl;
 
+import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.InputMismatchException;
 import java.util.List;
 import java.util.Scanner;
 
 public class BrigadeView {
-    Scanner scanner = new Scanner(System.in);
-/*
-    public void showAllPersons() {
+    private Scanner scanner;
+    private BrigadeServiceImpl brigadeService;
+    private PersonServiceImpl personService;
+
+    public BrigadeView() throws SQLException {
+        scanner = new Scanner(System.in);
+        brigadeService = new BrigadeServiceImpl();
+        personService = new PersonServiceImpl();
+    }
+
+    private void showAllBrigades() {
         try {
-            List<Person> persons = new PersonServiceImpl().readAll();
-            if (!persons.isEmpty()) {
-                System.out.println("\nList of persons:\n");
-                persons.forEach(System.out::println);
+            List<Brigade> brigades = brigadeService.findAll();
+            if (!brigades.isEmpty()) {
+                System.out.println("\nList of brigades:\n");
+                brigades.forEach(System.out::println);
             } else {
-                System.out.println("\nNo person found in the database!");
+                System.out.println("\nNo brigade found in the database!");
             }
         } catch (ServiceException serviceException) {
             System.out.println(serviceException.getMessage());
         }
     }
 
-    public void showPersonById() {
-        System.out.println("\nEnter the id of the person you want to find:");
+    private void showBrigadeById() {
+        System.out.println("\nEnter the id of the brigade you want to find:");
         try {
-            Person person = new PersonServiceImpl().read(scanner.nextInt());
-            if (person != null) {
-                System.out.println("\n" + person);
+            Brigade brigade = brigadeService.findById(scanner.nextLong());
+            if (brigade != null) {
+                System.out.println("\n" + brigade);
             } else {
-                System.out.println("\nNo person with this id found in the database!");
+                System.out.println("\nNo brigade with this id found in the database!");
             }
         } catch (ServiceException serviceException) {
             System.out.println(serviceException.getMessage());
@@ -43,17 +56,49 @@ public class BrigadeView {
         }
     }
 
-    public void createPerson() {
+    private void createBrigade() {
         try {
-            Person person = new Person();
-            System.out.println("\nEnter person's name:");
-            person.setPersonName(scanner.next());
-            System.out.println("Enter the position of the person:");
-            person.setPersonType(PersonType.valueOf(scanner.next().toUpperCase()));
-            new PersonServiceImpl().save(person);
-            System.out.println("\nSaving to the database was successful!");
-        } catch (IllegalArgumentException illegalArgumentException) {
-            System.out.println("\nThere is no such position in the system.");
+            Brigade brigade = new Brigade();
+            List<Person> persons = new ArrayList<>();
+            System.out.println("\nEnter the number of people in the brigade (3-5):");
+            switch (scanner.nextInt()) {
+                case 3:
+                    System.out.println("Enter pilot id:");
+                    persons.add(personService.findById(scanner.nextLong()));
+                    System.out.println("Enter navigator id:");
+                    persons.add(personService.findById(scanner.nextLong()));
+                    System.out.println("Enter radioman id:");
+                    persons.add(personService.findById(scanner.nextLong()));
+                    break;
+                case 4:
+                    System.out.println("Enter pilot id:");
+                    persons.add(personService.findById(scanner.nextLong()));
+                    System.out.println("Enter navigator id:");
+                    persons.add(personService.findById(scanner.nextLong()));
+                    System.out.println("Enter radioman id:");
+                    persons.add(personService.findById(scanner.nextLong()));
+                    System.out.println("Enter first steward id:");
+                    persons.add(personService.findById(scanner.nextLong()));
+                    break;
+                case 5:
+                    System.out.println("Enter pilot id:");
+                    persons.add(personService.findById(scanner.nextLong()));
+                    System.out.println("Enter navigator id:");
+                    persons.add(personService.findById(scanner.nextLong()));
+                    System.out.println("Enter radioman id:");
+                    persons.add(personService.findById(scanner.nextLong()));
+                    System.out.println("Enter first steward id:");
+                    persons.add(personService.findById(scanner.nextLong()));
+                    System.out.println("Enter second steward id:");
+                    persons.add(personService.findById(scanner.nextLong()));
+                    break;
+                default:
+                    System.out.println("\nInvalid number! Enter a number between 3 and 5.");
+                    return;
+            }
+            brigade.setPersons(persons);
+            List<Brigade> brigadeList = new ArrayList<Brigade>(){{add(brigade);}};
+            brigadeService.create(brigadeList);
         } catch (ServiceException serviceException) {
             System.out.println("\n" + serviceException.getMessage());
         } catch (InputMismatchException inputMismatchException) {
@@ -62,63 +107,88 @@ public class BrigadeView {
         }
     }
 
-    public void editPerson() {
+    private void editBrigade() {
         try {
-            System.out.println("\nEnter the id of the person you want to change:");
-            Person person = new PersonServiceImpl().read(scanner.nextInt());
-            if (person != null) {
+            System.out.println("\nEnter the id of the brigade you want to change:");
+            Brigade brigade = brigadeService.findById(scanner.nextLong());
+            if (brigade != null) {
                 System.out.println("\nSelect an option for the operation (enter a number):\n" +
                         "1. Complete change of data about a person\n" +
                         "2. Partial change of data about a person\n" +
                         "3. Abort the change operation");
                 switch (scanner.nextInt()) {
                     case 1:
-                        System.out.println("\nEnter person's name:");
-                        person.setPersonName(scanner.next());
-                        System.out.println("Enter the position of the person:");
-                        person.setPersonType(PersonType.valueOf(scanner.next().toUpperCase()));
-                        System.out.println("Enter the person's employment (yes or no):");
-                        String isFree1 = scanner.next();
-                        if (isFree1.equals("yes")) {
-                            person.setFree(false);
-                        } else if (isFree1.equals("no")) {
-                            person.setFree(true);
-                        } else {
-                            System.out.println("\nThe value of the person's employment has been entered incorrectly! Canceling the change to the object.");
-                            return;
+                        List<Person> persons = new ArrayList<>();
+                        switch (scanner.nextInt()) {
+                            case 3:
+                                System.out.println("Enter pilot id:");
+                                persons.add(personService.findById(scanner.nextLong()));
+                                System.out.println("Enter navigator id:");
+                                persons.add(personService.findById(scanner.nextLong()));
+                                System.out.println("Enter radioman id:");
+                                persons.add(personService.findById(scanner.nextLong()));
+                                break;
+                            case 4:
+                                System.out.println("Enter pilot id:");
+                                persons.add(personService.findById(scanner.nextLong()));
+                                System.out.println("Enter navigator id:");
+                                persons.add(personService.findById(scanner.nextLong()));
+                                System.out.println("Enter radioman id:");
+                                persons.add(personService.findById(scanner.nextLong()));
+                                System.out.println("Enter first steward id:");
+                                persons.add(personService.findById(scanner.nextLong()));
+                                break;
+                            case 5:
+                                System.out.println("Enter pilot id:");
+                                persons.add(personService.findById(scanner.nextLong()));
+                                System.out.println("Enter navigator id:");
+                                persons.add(personService.findById(scanner.nextLong()));
+                                System.out.println("Enter radioman id:");
+                                persons.add(personService.findById(scanner.nextLong()));
+                                System.out.println("Enter first steward id:");
+                                persons.add(personService.findById(scanner.nextLong()));
+                                System.out.println("Enter second steward id:");
+                                persons.add(personService.findById(scanner.nextLong()));
+                                break;
+                            default:
+                                System.out.println("\nInvalid number! Enter a number between 3 and 5.");
+                                return;
                         }
+                        brigade.setPersons(persons);
                         break;
                     case 2:
                         System.out.println("\nSelect an option for the operation (enter a number):\n" +
-                                "1. Change of person's name\n" +
-                                "2. Changing the position of a person\n" +
-                                "3. Person's employment change\n" +
-                                "4. Abort the change operation");
+                                "1. Change pilot\n" +
+                                "2. Change navigator\n" +
+                                "3. Change radioman\n" +
+                                "4. Change first steward\n" +
+                                "5. Change second steward\n" +
+                                "6. Abort the change operation");
                         switch (scanner.nextInt()) {
                             case 1:
-                                System.out.println("\nEnter person's name:");
-                                person.setPersonName(scanner.next());
+                                System.out.println("Enter pilot id:");
+                                brigade.getPersons().set(0, personService.findById(scanner.nextLong()));
                                 break;
                             case 2:
-                                System.out.println("Enter the position of the person:");
-                                person.setPersonType(PersonType.valueOf(scanner.next().toUpperCase()));
+                                System.out.println("Enter navigator id:");
+                                brigade.getPersons().set(1, personService.findById(scanner.nextLong()));
                                 break;
                             case 3:
-                                System.out.println("Enter the person's employment (yes or no):");
-                                String isFree2 = scanner.next();
-                                if (isFree2.equals("yes")) {
-                                    person.setFree(false);
-                                } else if (isFree2.equals("no")) {
-                                    person.setFree(true);
-                                } else {
-                                    System.out.println("\nThe value of the person's employment has been entered incorrectly! Canceling the change to the object.");
-                                    return;
-                                }
+                                System.out.println("Enter radioman id:");
+                                brigade.getPersons().set(2, personService.findById(scanner.nextLong()));
                                 break;
                             case 4:
+                                System.out.println("Enter first steward id:");
+                                brigade.getPersons().set(3, personService.findById(scanner.nextLong()));
+                                break;
+                            case 5:
+                                System.out.println("Enter second steward id:");
+                                brigade.getPersons().set(4, personService.findById(scanner.nextLong()));
+                                break;
+                            case 6:
                                 return;
                             default:
-                                System.out.println("\nInvalid number! Enter a number between 1 and 4.");
+                                System.out.println("\nInvalid number! Enter a number between 1 and 6.");
                         }
                         break;
                     case 3:
@@ -126,25 +196,23 @@ public class BrigadeView {
                     default:
                         System.out.println("\nInvalid number! Enter a number between 1 and 3.");
                 }
-                new PersonServiceImpl().edit(person);
-                System.out.println("\nThe persona change was successful!");
+                brigadeService.edit(brigade);
+                System.out.println("\nThe brigade change was successful!");
             } else {
-                System.out.println("\nNo person with this id found in the database!");
+                System.out.println("\nNo brigade with this id found in the database!");
             }
         } catch (ServiceException serviceException) {
             System.out.println("\n" + serviceException.getMessage());
         } catch (InputMismatchException inputMismatchException) {
             System.out.println("\nIncorrectly entered Id.");
             scanner.nextLine();
-        } catch (IllegalArgumentException illegalArgumentException) {
-            System.out.println("\nThere is no such position in the system.");
         }
     }
 
-    public void deletePerson() {
-        System.out.println("\nEnter the id of the person you want to remove:");
+    private void deleteBrigade() {
+        System.out.println("\nEnter the id of the brigade you want to remove:");
         try {
-            new PersonServiceImpl().delete(scanner.nextInt());
+            brigadeService.delete(scanner.nextLong());
             System.out.println("\nRemoval was successful!");
         } catch (ServiceException serviceException) {
             System.out.println(serviceException.getMessage());
@@ -158,28 +226,28 @@ public class BrigadeView {
         boolean proceed = true;
         while (proceed) {
             System.out.println("\nSelect the action you want to take:\n" +
-                    "1. Display personnel list\n" +
-                    "2. Display person by id\n" +
-                    "3. Create person\n" +
-                    "4. Edit person\n" +
-                    "5. Delete person\n" +
+                    "1. Display brigades list\n" +
+                    "2. Display brigade by id\n" +
+                    "3. Create brigade\n" +
+                    "4. Edit brigade\n" +
+                    "5. Delete brigade\n" +
                     "6. Return to main menu");
             try {
                 switch (scanner.nextInt()) {
                     case 1:
-                        showAllPersons();
+                        showAllBrigades();
                         break;
                     case 2:
-                        showPersonById();
+                        showBrigadeById();
                         break;
                     case 3:
-                        createPerson();
+                        createBrigade();
                         break;
                     case 4:
-                        editPerson();
+                        editBrigade();
                         break;
                     case 5:
-                        deletePerson();
+                        deleteBrigade();
                         break;
                     case 6:
                         proceed = false;
@@ -210,5 +278,5 @@ public class BrigadeView {
                 }
             }
         }
-    }*/
+    }
 }

@@ -1,43 +1,47 @@
 package view;
 
-import entity.Person;
+import entity.Brigade;
+import entity.Flight;
 import entity.PersonType;
 import service.ServiceException;
-import service.logic.PersonServiceImpl;
-
+import service.logic.FlightServiceImpl;
 import java.sql.SQLException;
-import java.util.InputMismatchException;
-import java.util.List;
-import java.util.Optional;
-import java.util.Scanner;
+import java.util.*;
 
 public class FlightView {
-    Scanner scanner = new Scanner(System.in);
+    private Scanner scanner;
+    private FlightServiceImpl flightService;
 
-    public void showAllPersons() {
+    public FlightView() throws SQLException {
+        scanner = new Scanner(System.in);
+        flightService = new FlightServiceImpl();
+    }
+
+
+    private void showAllFlights() {
         try {
-            List<Person> persons = new PersonServiceImpl().findAll();
-            if (!persons.isEmpty()) {
-                System.out.println("\nList of persons:\n");
-                persons.forEach(System.out::println);
+            List<Flight> flights = flightService.findAll();
+            if (!flights.isEmpty()) {
+                System.out.println("\nList of flights:\n");
+                flights.forEach(System.out::println);
             } else {
-                System.out.println("\nNo person found in the database!");
+                System.out.println("\nNo flight found in the database!");
             }
-        } catch (ServiceException | SQLException serviceException) {
+        } catch (ServiceException serviceException) {
             System.out.println(serviceException.getMessage());
         }
     }
 
-    public void showPersonById() {
-        System.out.println("\nEnter the id of the person you want to find:");
+    private void showFlightById() {
+        System.out.println("\nEnter the id of the flight you want to find:");
         try {
-            Optional<Person> person = new PersonServiceImpl().findById(scanner.nextLong());
-            if (person != null) {
-                System.out.println("\n" + person);
+            Flight flight = flightService.findById(scanner.nextLong());
+            if (flight != null) {
+                System.out.println("\n" + flight);
             } else {
-                System.out.println("\nNo person with this id found in the database!");
+                System.out.println("\nNo flight with this id found in the database!");
             }
-        } catch (ServiceException | SQLException serviceException) {
+        } catch (ServiceException serviceException) {
             System.out.println(serviceException.getMessage());
         } catch (InputMismatchException inputMismatchException) {
             System.out.println("\nIncorrectly entered Id.");
@@ -45,82 +49,74 @@ public class FlightView {
         }
     }
 
-    public void createPerson() {
-        /*try {
-            Person person = new Person();
-            System.out.println("\nEnter person's name:");
-            person.setPersonName(scanner.next());
-            System.out.println("Enter the position of the person:");
-            person.setPersonType(PersonType.valueOf(scanner.next().toUpperCase()));
-            new PersonServiceImpl().create(person);
+    private void createFlight() {
+        try {
+            Flight flight = new Flight();
+            System.out.println("\nEnter flight's name:");
+            flight.setFlightName(scanner.next());
+            System.out.println("Do you want to immediately add a crew to your flight? Enter yes or no:");
+            switch (scanner.next()) {
+                case "yes":
+                    System.out.println("Enter the brigade id:");
+                    Brigade brigade = new Brigade();
+                    brigade.setId(scanner.nextLong());
+                    flight.setBrigade(brigade);
+                    break;
+                case "no":
+                    break;
+                default:
+                    System.out.println("Incorrect input.");
+                    return;
+            }
+            List<Flight> flightList = new ArrayList<Flight>(){{add(flight);}};
+            flightService.create(flightList);
             System.out.println("\nSaving to the database was successful!");
-        } catch (IllegalArgumentException illegalArgumentException) {
-            System.out.println("\nThere is no such position in the system.");
         } catch (ServiceException serviceException) {
             System.out.println("\n" + serviceException.getMessage());
         } catch (InputMismatchException inputMismatchException) {
             System.out.println("\nIncorrectly entered Id.");
             scanner.nextLine();
-        }*/
+        }
     }
 
-    public void editPerson() {
-        /*try {
+    private void editFlight() {
+        try {
             System.out.println("\nEnter the id of the person you want to change:");
-            Person person = new PersonServiceImpl().read(scanner.nextInt());
-            if (person != null) {
+            Flight flight = flightService.findById(scanner.nextLong());
+            if (flight != null) {
                 System.out.println("\nSelect an option for the operation (enter a number):\n" +
                         "1. Complete change of data about a person\n" +
                         "2. Partial change of data about a person\n" +
                         "3. Abort the change operation");
                 switch (scanner.nextInt()) {
                     case 1:
-                        System.out.println("\nEnter person's name:");
-                        person.setPersonName(scanner.next());
-                        System.out.println("Enter the position of the person:");
-                        person.setPersonType(PersonType.valueOf(scanner.next().toUpperCase()));
-                        System.out.println("Enter the person's employment (yes or no):");
-                        String isFree1 = scanner.next();
-                        if (isFree1.equals("yes")) {
-                            person.setFree(false);
-                        } else if (isFree1.equals("no")) {
-                            person.setFree(true);
-                        } else {
-                            System.out.println("\nThe value of the person's employment has been entered incorrectly! Canceling the change to the object.");
-                            return;
-                        }
+                        System.out.println("\nEnter flight's name:");
+                        flight.setFlightName(scanner.next());
+                        System.out.println("Enter the brigade id:");
+                        Brigade brigade = new Brigade();
+                        brigade.setId(scanner.nextLong());
+                        flight.setBrigade(brigade);
                         break;
                     case 2:
                         System.out.println("\nSelect an option for the operation (enter a number):\n" +
-                                "1. Change of person's name\n" +
-                                "2. Changing the position of a person\n" +
-                                "3. Person's employment change\n" +
-                                "4. Abort the change operation");
+                                "1. Change of flight's name\n" +
+                                "2. Change brigade\n" +
+                                "3. Abort the change operation");
                         switch (scanner.nextInt()) {
                             case 1:
-                                System.out.println("\nEnter person's name:");
-                                person.setPersonName(scanner.next());
+                                System.out.println("\nEnter flight's name:");
+                                flight.setFlightName(scanner.next());
                                 break;
                             case 2:
-                                System.out.println("Enter the position of the person:");
-                                person.setPersonType(PersonType.valueOf(scanner.next().toUpperCase()));
+                                System.out.println("Enter the brigade id:");
+                                Brigade brigade1 = new Brigade();
+                                brigade1.setId(scanner.nextLong());
+                                flight.setBrigade(brigade1);
                                 break;
                             case 3:
-                                System.out.println("Enter the person's employment (yes or no):");
-                                String isFree2 = scanner.next();
-                                if (isFree2.equals("yes")) {
-                                    person.setFree(false);
-                                } else if (isFree2.equals("no")) {
-                                    person.setFree(true);
-                                } else {
-                                    System.out.println("\nThe value of the person's employment has been entered incorrectly! Canceling the change to the object.");
-                                    return;
-                                }
-                                break;
-                            case 4:
                                 return;
                             default:
-                                System.out.println("\nInvalid number! Enter a number between 1 and 4.");
+                                System.out.println("\nInvalid number! Enter a number between 1 and 3.");
                         }
                         break;
                     case 3:
@@ -128,60 +124,58 @@ public class FlightView {
                     default:
                         System.out.println("\nInvalid number! Enter a number between 1 and 3.");
                 }
-                new PersonServiceImpl().edit(person);
-                System.out.println("\nThe persona change was successful!");
+                flightService.edit(flight);
+                System.out.println("\nThe flight change was successful!");
             } else {
-                System.out.println("\nNo person with this id found in the database!");
+                System.out.println("\nNo flight with this id found in the database!");
             }
         } catch (ServiceException serviceException) {
             System.out.println("\n" + serviceException.getMessage());
         } catch (InputMismatchException inputMismatchException) {
             System.out.println("\nIncorrectly entered Id.");
             scanner.nextLine();
-        } catch (IllegalArgumentException illegalArgumentException) {
-            System.out.println("\nThere is no such position in the system.");
-        }*/
+        }
     }
 
-    public void deletePerson() {
-        /*System.out.println("\nEnter the id of the person you want to remove:");
+    private void deleteFlight() {
+        System.out.println("\nEnter the id of the flight you want to remove:");
         try {
-            new PersonServiceImpl().delete(scanner.nextInt());
+            flightService.delete(scanner.nextLong());
             System.out.println("\nRemoval was successful!");
         } catch (ServiceException serviceException) {
             System.out.println(serviceException.getMessage());
         } catch (InputMismatchException inputMismatchException) {
             System.out.println("\nIncorrectly entered Id.");
             scanner.nextLine();
-        }*/
+        }
     }
 
     public void run() {
         boolean proceed = true;
         while (proceed) {
             System.out.println("\nSelect the action you want to take:\n" +
-                    "1. Display personnel list\n" +
-                    "2. Display person by id\n" +
-                    "3. Create person\n" +
-                    "4. Edit person\n" +
-                    "5. Delete person\n" +
+                    "1. Display flight list\n" +
+                    "2. Display flight by id\n" +
+                    "3. Create flight\n" +
+                    "4. Edit flight\n" +
+                    "5. Delete flight\n" +
                     "6. Return to main menu");
             try {
                 switch (scanner.nextInt()) {
                     case 1:
-                        showAllPersons();
+                        showAllFlights();
                         break;
                     case 2:
-                        showPersonById();
+                        showFlightById();
                         break;
                     case 3:
-                        createPerson();
+                        createFlight();
                         break;
                     case 4:
-                        editPerson();
+                        editFlight();
                         break;
                     case 5:
-                        deletePerson();
+                        deleteFlight();
                         break;
                     case 6:
                         proceed = false;

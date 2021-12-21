@@ -3,36 +3,35 @@ package utils.json.write;
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import dao.Dao;
+import dao.DaoException;
 import entity.Entity;
-import service.Service;
-import service.ServiceException;
-
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.Writer;
 import java.util.List;
 
-public class JsonWriter<T extends Entity> {
+public abstract class JsonWriter<T extends Entity> {
     protected Gson gson;
     protected String propName;
-    protected Service<T> service;
+    protected Dao<T> dao;
 
-    private void writeJson(List<T> data, String filePathName) {
+    private void writeJson(List<T> data, String filePathName) throws IOException {
         try (Writer writer = new FileWriter(filePathName)) {
             JsonElement je = gson.toJsonTree(data);
             JsonObject jo = new JsonObject();
             jo.add(propName, je);
             gson.toJson(jo, writer);
         } catch (IOException e) {
-            e.printStackTrace();
+            throw new IOException(e);
         }
     }
 
-    public void exportToJsonFromDB(String filePathName) {
+    public void exportToJsonFromDB(String filePathName) throws DaoException, IOException {
         try {
-            writeJson(service.findAll(), filePathName);
-        } catch (ServiceException e) {
-            e.printStackTrace();
+            writeJson(dao.readAll(), filePathName);
+        } catch (DaoException e) {
+            throw new DaoException(e);
         }
     }
 }

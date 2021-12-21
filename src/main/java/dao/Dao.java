@@ -19,9 +19,6 @@ public interface Dao<T extends Entity> {
     Long getMaxId() throws DaoException;
 
     default void create(String sql, List<T> entities, Connection connection, StatementSetter<T> statementSetter) throws DaoException {
-        if (entities == null || entities.size() == 0) {
-            throw new DaoException("There is no users for create");
-        }
         try (PreparedStatement statement = connection.prepareStatement(sql)) {
             for (T entity : entities) {
                 statementSetter.setStatement(statement, entity);

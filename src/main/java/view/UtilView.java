@@ -1,191 +1,85 @@
 package view;
 
-import entity.Person;
-import entity.PersonType;
+import dao.DaoException;
 import service.ServiceException;
-import service.logic.PersonServiceImpl;
+import utils.json.read.JsonReader;
+import utils.json.write.BrigadeWriter;
+import utils.json.write.FlightWriter;
+import utils.json.write.JsonWriter;
+import utils.json.write.PersonWriter;
 
+import java.io.IOException;
+import java.sql.SQLException;
 import java.util.InputMismatchException;
-import java.util.List;
 import java.util.Scanner;
 
-public class UtilView {/*
-    Scanner scanner = new Scanner(System.in);
+public class UtilView {
+    private Scanner scanner;
+    private JsonWriter personWriter;
+    private JsonWriter flightWriter;
+    private JsonWriter brigadeWriter;
+    private JsonReader jsonReader;
 
-    public void showAllPersons() {
-        try {
-            List<Person> persons = new PersonServiceImpl().readAll();
-            if (!persons.isEmpty()) {
-                System.out.println("\nList of persons:\n");
-                persons.forEach(System.out::println);
-            } else {
-                System.out.println("\nNo person found in the database!");
-            }
-        } catch (ServiceException serviceException) {
-            System.out.println(serviceException.getMessage());
-        }
+    public UtilView() throws SQLException {
+        scanner = new Scanner(System.in);
+        personWriter = new PersonWriter();
+        flightWriter = new FlightWriter();
+        brigadeWriter = new BrigadeWriter();
+        jsonReader = new JsonReader();
     }
 
-    public void showPersonById() {
-        System.out.println("\nEnter the id of the person you want to find:");
+    private void importToDB() {
+        System.out.println("\nEnter the path to the input file:");
         try {
-            Person person = new PersonServiceImpl().read(scanner.nextInt());
-            if (person != null) {
-                System.out.println("\n" + person);
-            } else {
-                System.out.println("\nNo person with this id found in the database!");
-            }
-        } catch (ServiceException serviceException) {
-            System.out.println(serviceException.getMessage());
-        } catch (InputMismatchException inputMismatchException) {
-            System.out.println("\nIncorrectly entered Id.");
-            scanner.nextLine();
+            jsonReader.importToDBFromJson("7.airline.json", "persons");
+        } catch (DaoException e) {
+            System.out.println("\nError while writing to database!");
+        } catch (IOException e) {
+            System.out.println("\nCould not find input file!");
         }
+        System.out.println("Import of data into the database was successful!");
     }
 
-    public void createPerson() {
+    private void exportToJson() {
+        System.out.println("\nEnter the name of the output file for persons:");
+        String personsOutputFile = scanner.next();
+        System.out.println("Enter the name of the output file for flights:");
+        String flightsOutputFile = scanner.next();
+        System.out.println("Enter the name of the output file for brigades:");
+        String brigadesOutputFile = scanner.next();
         try {
-            Person person = new Person();
-            System.out.println("\nEnter person's name:");
-            person.setPersonName(scanner.next());
-            System.out.println("Enter the position of the person:");
-            person.setPersonType(PersonType.valueOf(scanner.next().toUpperCase()));
-            new PersonServiceImpl().save(person);
-            System.out.println("\nSaving to the database was successful!");
-        } catch (IllegalArgumentException illegalArgumentException) {
-            System.out.println("\nThere is no such position in the system.");
-        } catch (ServiceException serviceException) {
-            System.out.println("\n" + serviceException.getMessage());
-        } catch (InputMismatchException inputMismatchException) {
-            System.out.println("\nIncorrectly entered Id.");
-            scanner.nextLine();
+            personWriter.exportToJsonFromDB(personsOutputFile);
+            flightWriter.exportToJsonFromDB(flightsOutputFile);
+            brigadeWriter.exportToJsonFromDB(brigadesOutputFile);
+        } catch (DaoException e) {
+            System.out.println("\nFailed to export data from database to json!");
+        } catch (IOException e) {
+            System.out.println("Could not create an output file at the specified path!");
         }
+        System.out.println("Exporting data from database to json file was successful!");
     }
 
-    public void editPerson() {
-        try {
-            System.out.println("\nEnter the id of the person you want to change:");
-            Person person = new PersonServiceImpl().read(scanner.nextInt());
-            if (person != null) {
-                System.out.println("\nSelect an option for the operation (enter a number):\n" +
-                        "1. Complete change of data about a person\n" +
-                        "2. Partial change of data about a person\n" +
-                        "3. Abort the change operation");
-                switch (scanner.nextInt()) {
-                    case 1:
-                        System.out.println("\nEnter person's name:");
-                        person.setPersonName(scanner.next());
-                        System.out.println("Enter the position of the person:");
-                        person.setPersonType(PersonType.valueOf(scanner.next().toUpperCase()));
-                        System.out.println("Enter the person's employment (yes or no):");
-                        String isFree1 = scanner.next();
-                        if (isFree1.equals("yes")) {
-                            person.setFree(false);
-                        } else if (isFree1.equals("no")) {
-                            person.setFree(true);
-                        } else {
-                            System.out.println("\nThe value of the person's employment has been entered incorrectly! Canceling the change to the object.");
-                            return;
-                        }
-                        break;
-                    case 2:
-                        System.out.println("\nSelect an option for the operation (enter a number):\n" +
-                                "1. Change of person's name\n" +
-                                "2. Changing the position of a person\n" +
-                                "3. Person's employment change\n" +
-                                "4. Abort the change operation");
-                        switch (scanner.nextInt()) {
-                            case 1:
-                                System.out.println("\nEnter person's name:");
-                                person.setPersonName(scanner.next());
-                                break;
-                            case 2:
-                                System.out.println("Enter the position of the person:");
-                                person.setPersonType(PersonType.valueOf(scanner.next().toUpperCase()));
-                                break;
-                            case 3:
-                                System.out.println("Enter the person's employment (yes or no):");
-                                String isFree2 = scanner.next();
-                                if (isFree2.equals("yes")) {
-                                    person.setFree(false);
-                                } else if (isFree2.equals("no")) {
-                                    person.setFree(true);
-                                } else {
-                                    System.out.println("\nThe value of the person's employment has been entered incorrectly! Canceling the change to the object.");
-                                    return;
-                                }
-                                break;
-                            case 4:
-                                return;
-                            default:
-                                System.out.println("\nInvalid number! Enter a number between 1 and 4.");
-                        }
-                        break;
-                    case 3:
-                        return;
-                    default:
-                        System.out.println("\nInvalid number! Enter a number between 1 and 3.");
-                }
-                new PersonServiceImpl().edit(person);
-                System.out.println("\nThe persona change was successful!");
-            } else {
-                System.out.println("\nNo person with this id found in the database!");
-            }
-        } catch (ServiceException serviceException) {
-            System.out.println("\n" + serviceException.getMessage());
-        } catch (InputMismatchException inputMismatchException) {
-            System.out.println("\nIncorrectly entered Id.");
-            scanner.nextLine();
-        } catch (IllegalArgumentException illegalArgumentException) {
-            System.out.println("\nThere is no such position in the system.");
-        }
-    }
-
-    public void deletePerson() {
-        System.out.println("\nEnter the id of the person you want to remove:");
-        try {
-            new PersonServiceImpl().delete(scanner.nextInt());
-            System.out.println("\nRemoval was successful!");
-        } catch (ServiceException serviceException) {
-            System.out.println(serviceException.getMessage());
-        } catch (InputMismatchException inputMismatchException) {
-            System.out.println("\nIncorrectly entered Id.");
-            scanner.nextLine();
-        }
-    }
 
     public void run() {
         boolean proceed = true;
         while (proceed) {
             System.out.println("\nSelect the action you want to take:\n" +
-                    "1. Display personnel list\n" +
-                    "2. Display person by id\n" +
-                    "3. Create person\n" +
-                    "4. Edit person\n" +
-                    "5. Delete person\n" +
-                    "6. Return to main menu");
+                    "1. Go to import to DB\n" +
+                    "2. Go to export to Json\n" +
+                    "3. Return to main menu");
             try {
                 switch (scanner.nextInt()) {
                     case 1:
-                        showAllPersons();
+                        importToDB();
                         break;
                     case 2:
-                        showPersonById();
+                        exportToJson();
                         break;
                     case 3:
-                        createPerson();
-                        break;
-                    case 4:
-                        editPerson();
-                        break;
-                    case 5:
-                        deletePerson();
-                        break;
-                    case 6:
                         proceed = false;
                         break;
                     default:
-                        System.out.println("\nInvalid number! Enter a number between 1 and 6.");
+                        System.out.println("\nInvalid number! Enter a number between 1 and 3.");
                 }
             } catch (InputMismatchException inputMismatchException) {
                 System.out.println("\nError! You must enter a number.");
@@ -210,5 +104,5 @@ public class UtilView {/*
                 }
             }
         }
-    }*/
+    }
 }

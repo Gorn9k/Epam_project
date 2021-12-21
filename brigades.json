@@ -2,10 +2,18 @@
   "brigades": [
     {
       "persons": [
-        "Patrick Goddard",
-        "Thomas Nicholls",
-        "Jordan Berry",
-        "Elise Kerr"
+        {
+          "personName": "Patrick Goddard"
+        },
+        {
+          "personName": "Thomas Nicholls"
+        },
+        {
+          "personName": "Jordan Berry"
+        },
+        {
+          "personName": "Elise Kerr"
+        }
       ],
       "flights": [
         {
@@ -18,11 +26,21 @@
     },
     {
       "persons": [
-        "Henry Forster",
-        "Samantha Chan",
-        "Amelia Burgess",
-        "Jasmine Field",
-        "Charlotte Daly"
+        {
+          "personName": "Henry Forster"
+        },
+        {
+          "personName": "Samantha Chan"
+        },
+        {
+          "personName": "Amelia Burgess"
+        },
+        {
+          "personName": "Jasmine Field"
+        },
+        {
+          "personName": "Charlotte Daly"
+        }
       ],
       "flights": [
         {
@@ -32,9 +50,15 @@
     },
     {
       "persons": [
-        "Scott Sanders",
-        "Connor Bryan",
-        "John Potter"
+        {
+          "personName": "Scott Sanders"
+        },
+        {
+          "personName": "Connor Bryan"
+        },
+        {
+          "personName": "John Potter"
+        }
       ],
       "flights": [
         {
@@ -44,9 +68,15 @@
     },
     {
       "persons": [
-        "Maya Wilkinson",
-        "Leo Armstrong",
-        "Alexander Hayward"
+        {
+          "personName": "Maya Wilkinson"
+        },
+        {
+          "personName": "Leo Armstrong"
+        },
+        {
+          "personName": "Alexander Hayward"
+        }
       ],
       "flights": [
         {

@@ -20,7 +20,9 @@ public class FlightDaoImpl extends BaseDaoImpl implements Dao<Flight> {
         super(connection);
         statementSetter = (statement, flight) -> {
             statement.setString(1, flight.getFlightName());
-            statement.setLong(2, flight.getBrigade().getId());
+            if (flight.getBrigade() != null) {
+                statement.setLong(2, flight.getBrigade().getId());
+            }
         };
         entityCreator = resultSet -> {
             Flight flight = new Flight();
@@ -49,11 +51,12 @@ public class FlightDaoImpl extends BaseDaoImpl implements Dao<Flight> {
                          ResultSet resultSetForPersons = preparedStatementForPersons.executeQuery()) {
                         brigade = new Brigade();
                         while (resultSetForPersons.next()) {
-                            brigade.addPerson(new Person(resultSetForPersons.getLong("id"),
+                            brigade.getPersons().add(new Person(resultSetForPersons.getLong("id"),
                                     resultSetForPersons.getString("personName"),
                                     PersonType.valueOf(resultSetForPersons.getString("personType")),
                                     resultSetForPersons.getBoolean("isFree")));
                         }
+                        brigade.setId(resultSetForFlights.getLong("idBrigade"));
                         flight.setBrigade(brigade);
                     }
                 }
@@ -66,7 +69,12 @@ public class FlightDaoImpl extends BaseDaoImpl implements Dao<Flight> {
 
     @Override
     public void save(List<Flight> entities) throws DaoException {
-        String sql = "insert into flights (flightName, idBrigade) values(?, ?)";
+        String sql;
+        if(entities.stream().anyMatch(flight -> flight.getBrigade() == null)) {
+            sql = "insert into flights (flightName) values(?)";
+        } else {
+            sql = "insert into flights (flightName, idBrigade) values(?, ?)";
+        }
         create(sql, entities, getConnection(), statementSetter);
     }
 

@@ -2,6 +2,7 @@ package dao.postgresql;
 
 import dao.Dao;
 import dao.DaoException;
+import dao.PersonDao;
 import entity.Entity;
 import entity.Person;
 import entity.PersonType;
@@ -10,7 +11,7 @@ import utils.db.StatementSetter;
 import java.sql.*;
 import java.util.*;
 
-public class PersonDaoImpl extends BaseDaoImpl implements Dao<Person> {
+public class PersonDaoImpl extends BaseDaoImpl implements PersonDao {
     private StatementSetter<Person> statementSetter;
     private EntityCreator<Person> entityCreator;
 
@@ -44,6 +45,8 @@ public class PersonDaoImpl extends BaseDaoImpl implements Dao<Person> {
             throw new DaoException(e);
         }
     }
+
+
 
     @Override
     public void save(List<Person> persons) throws DaoException {
@@ -83,5 +86,19 @@ public class PersonDaoImpl extends BaseDaoImpl implements Dao<Person> {
     public Long getMaxId() throws DaoException {
         String sql = "select max(id) from persons";
         return getMaxId(sql, getConnection());
+    }
+
+    @Override
+    public boolean isPersonExist(Person person) throws DaoException {
+        String sql = "select personName, personType, isFree from persons where personName = " + "'person.getPersonName()'" + " and " +
+                "personType = " + "'person.getPersonType()'" + " and isFree = " + person.isFree();
+        try (Statement statement = getConnection().createStatement(); ResultSet resultSet = statement.executeQuery(sql)) {
+            if (resultSet.next()) {
+                return true;
+            }
+            return false;
+        } catch (SQLException e) {
+            throw new DaoException(e);
+        }
     }
 }

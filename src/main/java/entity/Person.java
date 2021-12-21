@@ -1,8 +1,8 @@
 package entity;
 
 import com.google.gson.annotations.Expose;
-
 import java.util.List;
+import java.util.Objects;
 
 public class Person extends Entity implements Comparable<Person>{
     @Expose
@@ -14,16 +14,7 @@ public class Person extends Entity implements Comparable<Person>{
     @Expose(serialize = false)
     private List<Flight> flights;
 
-    public List<Flight> getFlights() {
-        return flights;
-    }
-
     public Person(){}
-
-    public Person(String personName, PersonType personType) {
-        this.personName = personName;
-        this.personType = personType;
-    }
 
     public Person(Long id, String personName, PersonType personType, boolean isFree) {
         super(id);
@@ -62,6 +53,23 @@ public class Person extends Entity implements Comparable<Person>{
         isFree = free;
     }
 
+    public List<Flight> getFlights() {
+        return flights;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Person person = (Person) o;
+        return isFree == person.isFree && Objects.equals(personName, person.personName) && personType == person.personType;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(personName, personType, isFree);
+    }
+
     @Override
     public String toString() {
         return "Person{" +
@@ -69,7 +77,6 @@ public class Person extends Entity implements Comparable<Person>{
                 ", personName='" + personName + '\'' +
                 ", personType=" + personType +
                 ", isFree=" + isFree +
-                //", flights=" + flights +
                 '}';
     }
 

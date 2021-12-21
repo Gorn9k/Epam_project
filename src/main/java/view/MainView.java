@@ -1,10 +1,11 @@
 package view;
 
+import java.sql.SQLException;
 import java.util.Scanner;
 
 public class MainView {
 
-    public void runMainView() {
+    public void runMainView() throws SQLException {
         Scanner scanner = new Scanner(System.in);
         boolean proceed = true;
         System.out.println("Hello!");
@@ -15,7 +16,7 @@ public class MainView {
                     "3. Brigades management\n" +
                     "4. Flights management\n" +
                     "5. Quit the application");
-            /*switch (scanner.nextInt()) {
+            switch (scanner.nextInt()) {
                 case 1:
                     new UtilView().run();
                     break;
@@ -33,7 +34,7 @@ public class MainView {
                     break;
                 default:
                     System.out.println("\nInvalid number! Enter a number between 1 and 5.");
-            }*/
+            }
         }
     }
 }

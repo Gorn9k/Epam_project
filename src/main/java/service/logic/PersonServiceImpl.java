@@ -2,12 +2,10 @@ package service.logic;
 
 import dao.DaoException;
 import dao.postgresql.PersonDaoImpl;
-import entity.Entity;
 import entity.Person;
 import service.Service;
 import service.ServiceException;
 import utils.db.Connector;
-
 import java.sql.SQLException;
 import java.util.List;
 import java.util.Optional;
@@ -20,12 +18,12 @@ public class PersonServiceImpl implements Service<Person> {
     }
 
     @Override
-    public Optional<Person> findById(Long id) throws ServiceException {
+    public Person findById(Long id) throws ServiceException {
         try {
             if (id != null) {
-                return Optional.ofNullable(personDao.read(id));
+                return personDao.read(id);
             } else {
-                throw new ServiceException();
+                throw new ServiceException("No entity's id was found");
             }
         } catch (DaoException daoException) {
             throw new ServiceException(daoException);
@@ -65,7 +63,7 @@ public class PersonServiceImpl implements Service<Person> {
                     personDao.update(person);
                 }
             } else {
-                throw new ServiceException();
+                throw new ServiceException("No entity with this identifier was found");
             }
         } catch (DaoException daoException) {
             throw new ServiceException(daoException);
@@ -78,7 +76,7 @@ public class PersonServiceImpl implements Service<Person> {
             if (id != null) {
                 personDao.delete(id);
             } else {
-                throw new ServiceException();
+                throw new ServiceException("No entity's id was found");
             }
         } catch (DaoException daoException) {
             throw new ServiceException(daoException);
