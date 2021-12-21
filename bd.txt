@@ -1,46 +1,27 @@
-CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
-
 CREATE TABLE Persons (
-	id uuid DEFAULT uuid_generate_v1(), 
-	personType text ,
-	personName text, 
-	birthday text, 
-	tel text, 
-	adress text,
+	id bigserial, 
+	personType varchar(13) not null,
+	personName varchar(40) not null, 
+	isFree boolean default true,
 	PRIMARY KEY(id));
+
+CREATE TABLE Brigades (
+	id bigserial, 
+	idPilot bigint not null, 
+	idNavigator bigint not null,  
+	idRadioman bigint not null, 
+	idFirstSteward bigint,
+	idSecondSteward bigint, 			  
+	PRIMARY KEY(id), 
+	FOREIGN KEY(idPilot) REFERENCES Persons(id) ON DELETE CASCADE, 
+	FOREIGN KEY(idNavigator) REFERENCES Persons(id) ON DELETE CASCADE,
+	FOREIGN KEY(idRadioman) REFERENCES Persons(id) ON DELETE CASCADE,
+	FOREIGN KEY(idFirstSteward) REFERENCES Persons(id) ON DELETE CASCADE,
+	FOREIGN KEY(idSecondSteward) REFERENCES Persons(id) ON DELETE CASCADE);
 
 CREATE TABLE Flights (
-	id uuid DEFAULT uuid_generate_v1(), 
-	flightName text, 
-	date_comp text, 
-	travel_time text,
-	id_brigade uuid,
-	PRIMARY KEY(id));
-					 
-CREATE TABLE Brigades (
-	id uuid DEFAULT uuid_generate_v1(), 
-	dateFormation text, 
-	id_firstPilot uuid, 
-	id_secondPilot uuid, 
-	id_navigator uuid,  
-	id_radioman uuid, 
-	id_firstSteward uuid,
-	id_secondSteward uuid, 			  
-	id_thirdSteward uuid, 
-	id_flight uuid, 
+	id bigserial, 
+	flightName varchar(30) not null, 
+	idBrigade integer,
 	PRIMARY KEY(id),
-	FOREIGN KEY(id_flight) REFERENCES Flights(id), 
-	FOREIGN KEY(id_firstPilot) REFERENCES Persons(id), 
-	FOREIGN KEY(id_secondPilot) REFERENCES Persons(id), 
-	FOREIGN KEY(id_navigator) REFERENCES Persons(id),
-	FOREIGN KEY(id_radioman) REFERENCES Persons(id),
-	FOREIGN KEY(id_firstSteward) REFERENCES Persons(id),
-	FOREIGN KEY(id_secondSteward) REFERENCES Persons(id),
-	FOREIGN KEY(id_thirdSteward) REFERENCES Persons(id));
-				  
-CREATE TABLE Users (
-	id uuid DEFAULT uuid_generate_v1(), 
-	login text,
-	password text, 
-	role text, 
-	PRIMARY KEY(id));		
+	FOREIGN KEY(idBrigade) REFERENCES Brigades(id) ON DELETE CASCADE);
