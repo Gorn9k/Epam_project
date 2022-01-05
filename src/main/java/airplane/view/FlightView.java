@@ -16,7 +16,8 @@ public class FlightView {
 
     public FlightView() throws ConnectorException {
         scanner = new Scanner(System.in);
-        flightService = new FlightServiceImpl(new FlightDaoImpl(Connector.getConnecting()), new BrigadeDaoImpl(Connector.getConnecting()));
+        flightService = new FlightServiceImpl(new FlightDaoImpl(Connector.getConnecting()),
+                new BrigadeDaoImpl(Connector.getConnecting()));
     }
 
     private void showAllFlights() {

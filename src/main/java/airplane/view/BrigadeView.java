@@ -224,6 +224,19 @@ public class BrigadeView {
         }
     }
 
+    private void toReleaseTheBrigade() {
+        System.out.println("\nEnter the id of the brigade you want to release:");
+        try {
+            brigadeService.toReleaseTheBrigadeById(scanner.nextLong());
+            System.out.println("\nReleasing was successful!");
+        } catch (ServiceException serviceException) {
+            serviceException.getMessage();
+        } catch (InputMismatchException inputMismatchException) {
+            System.out.println("\nIncorrectly entered Id.");
+            scanner.nextLine();
+        }
+    }
+
     public void run() {
         boolean proceed = true;
         while (proceed) {
@@ -233,7 +246,8 @@ public class BrigadeView {
                     "3. Create brigade\n" +
                     "4. Edit brigade\n" +
                     "5. Delete brigade\n" +
-                    "6. Return to main menu");
+                    "6. Release brigade\n" +
+                    "7. Return to main menu");
             try {
                 switch (scanner.nextInt()) {
                     case 1:
@@ -252,6 +266,9 @@ public class BrigadeView {
                         deleteBrigade();
                         break;
                     case 6:
+                        toReleaseTheBrigade();
+                        break;
+                    case 7:
                         proceed = false;
                         break;
                     default:

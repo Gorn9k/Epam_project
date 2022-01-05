@@ -56,6 +56,12 @@ public class BrigadeServiceImpl implements Service<Brigade> {
                 }
             }
             if (isExistInDB) {
+                for (Brigade brigade : entities) {
+                    for (Person person : brigade.getPersons()) {
+                        person.setFree(false);
+                        personDao.update(person);
+                    }
+                }
                 brigadeDao.save(entities);
             } else {
                 throw new ServiceException("No person was found");
@@ -82,6 +88,14 @@ public class BrigadeServiceImpl implements Service<Brigade> {
                     if (isExistInDB) {
                         List<Person> personList = new ArrayList<>();
                         for (int i = 0; i < brigade.getPersons().size(); i++) {
+                            if (!entity.getPersons().get(i).equals(brigade.getPersons().get(i))) {
+                                    Person newPerson = entity.getPersons().get(i);
+                                    Person oldPerson = brigade.getPersons().get(i);
+                                    newPerson.setFree(false);
+                                    oldPerson.setFree(true);
+                                    personDao.update(newPerson);
+                                    personDao.update(oldPerson);
+                            }
                             personList.add(entity.getPersons().get(i) == null ? brigade.getPersons().get(i) :
                                     entity.getPersons().get(i));
                         }
@@ -108,6 +122,18 @@ public class BrigadeServiceImpl implements Service<Brigade> {
                 brigadeDao.delete(id);
             } else {
                 throw new ServiceException("No entity's id was found");
+            }
+        } catch (DaoException daoException) {
+            throw new ServiceException(daoException);
+        }
+    }
+
+    public void toReleaseTheBrigadeById(Long id) throws ServiceException {
+        try {
+            Brigade brigade = brigadeDao.read(id);
+            for (Person person : brigade.getPersons()){
+                person.setFree(true);
+                personDao.update(person);
             }
         } catch (DaoException daoException) {
             throw new ServiceException(daoException);
